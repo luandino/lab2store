@@ -1,6 +1,0 @@
-
-[gssapi]
-pykerberos
-
-[tls]
-ipaddress

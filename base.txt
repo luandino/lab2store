@@ -1,5 +1,0 @@
-
-You are logued as  	luciano
-Your Password is  	colon
- Client_Id 	 0fWSJQbzHQVFFGzfxd5TJzz8nm2mdWGGL9QlsYxP
-Client_secret  	 fPJK1pCU56QvbRl8AxrvfBarGf5zOgw1M9BqnYgt5zBmdiEn2A
