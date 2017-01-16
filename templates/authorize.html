@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Authorization</title>
+</head>
+<body>
+  <p>Allow Russian stores to authenticate you?</p>
+  <p>Please enter username and password</p>
+  <form action="/api/authorize" method="post">
+    <p>Please login</p>
+    <input type="text" name="nombre" value="{{ NOMBRE }}" readonly>
+    <input type="password" name="password" id="password">
+    <input type="submit" name="confirm" value="Allow">
+    <input type="submit" name="confirm" value="No">
+  </form>
+</body>
+</html>

@@ -1,0 +1,8 @@
+// The Big Network
+digraph {
+	A [label=Anna]
+	E [label=Elena]
+	L [label=Luciano]
+		A -> L
+		E -> L
+}
