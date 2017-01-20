@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="favicon.ico">
+
+    <title>RSOI Lab N°2</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="../static/css/bootstrap.min.css" rel="stylesheet">
+
+
+    <link href="../static/css/starter-template.css" rel="stylesheet">
+
+
+
+  </head>
+
+  <body>
+
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">RSOI Lab N°2</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">RSOI Lab N°2</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="/ping">Ping</a></li>
+            <li><a href="/me">Me?</a></li>
+            <li><a href="/productos">Products List</a></li>
+            <li><a href="/orderlist">Orders List</a></li>
+            <li><a href="/order">Make an Order</a></li>
+            <li><a href="/logout">Logout</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+      <div class="starter-template">
+        <h1>RSOI Second Lab</h1>
+        <p class="lead">Order Number N°{{ order }} (Already paid orders can't be edited)</p>
+      </div>
+    <div align="center">
+    <table border="1">
+            <tbody>
+                <tr>
+                    <td>Id Product&nbsp;</td>
+                    <td>Quantity&nbsp;</td>
+                    <td>Name&nbsp;</td>
+                    <td>Description&nbsp;</td>
+                    <td>Price&nbsp;</td>
+                    <td>Add Quantity&nbsp;</td>
+                    <td>Delete Quantity&nbsp;</td>
+                </tr>
+             {% for item in items %}
+                <tr>
+                <td>
+                {{ item.product_id }}
+                </td>
+                 <td>
+                {{ item.quantity }}
+                </td>
+                <td>
+                {{ item.name }}
+                </td>
+                <td>
+                {{ item.description }}
+                </td>
+                <td>RUB&nbsp;
+                {{ item.price }}
+                </td>
+                <td align="center">
+                <a href="/orderdetail/{{item.order_id }}/add/{{item.product_id }}">
+                <img src="/static/add.png"></a>
+                </td>
+                <td align="center">
+                <a href="/orderdetail/{{item.order_id }}/del/{{item.product_id }}">
+                <img src="/static/minus.png"></a>
+                </td>
+                 </tr>
+            {% endfor %}
+                <tr>
+                <form id="register-form" action="/addnewproduct" method="post" role="form" style="display: none;">
+                <td>
+                <div>
+					<input type="text" name="product_id" id="product_id"  placeholder="" value="">
+                </div>
+                </td>
+                <td>
+                    <input type="text" name="order_id" id="order_id"  value="{{ order }}" readonly>
+                </td>
+                <td>
+                    <div>
+                    <input type="submit" name="add" id="add"  value="Add Product">
+                </div>
+                </form>
+                </td>
+
+                <td>
+
+                </td>
+                <td>
+
+                </td>
+
+                <td>
+                </td>
+                <td>
+
+                </td>
+
+                </tr>
+                <tr>
+
+                <td>
+
+                </td>
+                <td>
+
+                </td>
+                <td>
+
+
+                </td>
+
+                <td>
+                <b>Total Bill:</b>
+                </td>
+                <td>
+                <b>RUB {{ price }}</b>
+                </td>
+
+                <td>
+
+                </td>
+                <td>
+                <form id="rpay" action="/payorder" method="post"><div>
+                    <input type="hidden" name="order_id" id="order_id" value="{{ order }}" >
+                <input type="submit" name="add" id="add"  value="Pay Order">
+                </div>
+                </form>
+                </td>
+
+                </tr>
+
+
+               </tbody>
+        </table>
+        </div>
+
+        <br><br>
+
+
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+     <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>-->
+     <!--<script>window.jQuery || document.write('<script src="js/vendor/jquery.min.js"><\/script>')</script>-->
+    <script src="../static/js/bootstrap.min.js"></script>
+  </body>
+</html>

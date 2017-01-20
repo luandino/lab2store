@@ -12,10 +12,10 @@
     <title>RSOI Lab N°2</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../static/css/bootstrap.min.css" rel="stylesheet">
 
 
-    <link href="static/css/starter-template.css" rel="stylesheet">
+    <link href="../../static/css/starter-template.css" rel="stylesheet">
 
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -36,16 +36,17 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">RSOI Lab N°2</a>
+          <a class="navbar-brand" href="/">RSOI Lab N°2</a>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
+              <li><a href="/ping">Ping</a></li>
             <li><a href="/me">Me?</a></li>
             <li><a href="/productos">Products List</a></li>
             <li><a href="/orderlist">Orders List</a></li>
+            <li><a href="/order">Make an Order</a></li>
             <li><a href="/logout">Logout</a></li>
           </ul>
-
         </div>
       </div>
     </nav>
@@ -53,29 +54,24 @@
     <div class="container">
 
       <div class="starter-template">
-        <h1><b>RSOI Second Lab</b></h1><h2 style="color:blue;"><b> Welcome! *** {{ WHO }} *** to our Virtual Store</b></h2>
-        <p class="lead">We are a big magazine that sell electronics to retailers in All Russia.</p>
+        <h1>RSOI Second Lab</h1>
+        <p class="lead">We are a big magazine that sell electronics<br> to retailers in All Russia.</p>
       </div>
-      <div align="center">
+        <div align="center">
+            <h2>Order N°{{ NUMORDER }} created at {{ FECHA }}</h2>
 
-
-                <h3> Up you have a list of task you can do<br>
-                    Your token expires : {{ EXPIRES }}<br>
-                    and time now is : {{ NOW }}<br>
-                    So now you are : <b> {{ STATUS }} </b>
-                </h3>
-            <br><br>
-            <!--  <a class="btn btn-lg btn-success" href="/callback" role="button">UPDATE</a>-->
         </div>
+
     </div>
+
 
 
 
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script>window.jQuery || document.write('<script src="js/vendor/jquery.min.js"><\/script>')</script>
-    <script src="static/js/bootstrap.min.js"></script>
+     <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>-->
+     <!--<script>window.jQuery || document.write('<script src="js/vendor/jquery.min.js"><\/script>')</script>-->
+    <script src="../static/js/bootstrap.min.js"></script>
   </body>
 </html>

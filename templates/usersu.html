@@ -34,14 +34,15 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">RSOI Lab N°2</a>
+          <a class="navbar-brand" href="/">RSOI Lab N°2</a>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
+            <li><a href="/ping">Ping</a></li>
             <li><a href="/me">Me?</a></li>
             <li><a href="/productos">Products List</a></li>
-            <li><a href="/makeorder">Make an Order</a></li>
-            <li><a href="/payorder">Pay an order</a></li>
+            <li><a href="/orderlist">Orders List</a></li>
+            <li><a href="/order">Make an Order</a></li>
             <li><a href="/logout">Logout</a></li>
           </ul>
         </div>
@@ -62,7 +63,7 @@
             <tbody>
             <tr>
             <td>You are logued as&nbsp;</td>
-            <td bgcolor="yellow">{{ USERNAME }}</td>
+            <td bgcolor="yellow">&nbsp;&nbsp;&nbsp;<b>{{ USERNAME }}</b>&nbsp;&nbsp;</td>
             </tr>
             <tr>
             <td>&nbsp;</td>
@@ -73,13 +74,13 @@
             <td>&nbsp;</td>
             </tr>
             <tr>
-            <td> Expira&nbsp;</td>
-            <td>&nbsp;{{ EXPIRE }}</td>
+            <td> Token expiration:&nbsp;</td>
+            <td>&nbsp;&nbsp;&nbsp;{{ EXPIRE }}&nbsp;&nbsp; <b><i>{{ STATUS }}</i></b>&nbsp;&nbsp;</td>
             </tr>
             </tbody>
         </table>
         <br><br>
-         <a class="btn btn-lg btn-success" href="/" role="button">UPDATE</a>
+         <a class="btn btn-lg btn-success" href="/me" role="button">UPDATE</a>
     </div>
 
     <!-- Bootstrap core JavaScript

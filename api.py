@@ -14,6 +14,7 @@ import urllib
 import numpy as np
 from numpy import genfromtxt
 from time import time
+from math import ceil
 
 from sqlalchemy.ext.declarative import declarative_base
 from flask_bootstrap import Bootstrap
@@ -22,9 +23,6 @@ PER_PAGE = 10
 
 
 
-
-
-# initialization
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'rewrewtrtrewsadsdwredsadrqeqw'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
@@ -32,9 +30,6 @@ app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
 
-
-
-# extensions
 db = SQLAlchemy(app)
 auth = HTTPBasicAuth()
 
@@ -43,13 +38,11 @@ def create_app():
   Bootstrap(app)
   return app
 
-######################################## DATABASE DEFINITION AND FUNCTIONS ########################################
-
 @app.route('/favicon.ico')
 def favicon():
     return send_from_directory(os.path.join(app.root_path, 'static'),'favicon.ico', mimetype='image/vnd.microsoft.icon')
 
-
+########################################## DATABASE DEFINITION AND FUNCTIONS ##########################################
 
 class Product(db.Model):
     product_id = db.Column(db.Integer, primary_key=True)
@@ -65,20 +58,21 @@ class Stock(db.Model):
 
 class Order(db.Model):
     order_id = db.Column(db.Integer, primary_key=True)
-
+    date = db.Column(db.DateTime)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='CASCADE'))
     user = db.relationship('User')
+    status = db.Column(db.String(80))
 
 
 class OrderItem(db.Model):
     orderitem_id = db.Column(db.Integer, primary_key=True)
 
     order_id = db.Column(db.Integer, db.ForeignKey('order.order_id', ondelete='CASCADE'))
-    user = db.relationship('Order')
+    order = db.relationship('Order')
 
     product_id = db.Column(db.Integer, db.ForeignKey('product.product_id'))
     product = db.relationship('Product')
-
+    quantity = db.Column(db.Integer)
 
 class User(db.Model):
     __tablename__ = 'users'
@@ -241,7 +235,7 @@ def save_token(token, request, *args, **kwargs):
         client_id=request.client.client_id,
         user_id=request.user.id
     )
-    # make sure that every client has only one token connected to a user
+    #
     for t in toks:
         db.session.delete(t)
 
@@ -262,10 +256,10 @@ def save_token(token, request, *args, **kwargs):
     return tok
 
 
-############################  END DATABASE DEFINITION AND FUNCTIONS #################################
 
-################### RUNS ONLY LOCALLY, HERE USER REGISTER ###########################################
-################### AND RECEIVE A CLIENT_ID AND CLIENT SECRET #######################################
+
+
+####################### REGISTER: USER, PASSWORD AND CALLBACK ADDRESS IN CLIENT #######################################
 
 @app.route('/api/register', methods=('GET','POST'))
 def users():
@@ -288,8 +282,6 @@ def users():
             db.session.add(user)
             db.session.commit()
             session['id'] = user.id
-            print "user id"
-            print user.id
             item = Client(client_id=gen_salt(40),
                           client_secret=gen_salt(50),
                           user_id=user.id,
@@ -297,45 +289,12 @@ def users():
                           _default_scopes='email')
             db.session.add(item)
             db.session.commit()
-        return flask.render_template('users.html', USERNAME=username, NEWUSER=username, PASS=password, CI=item.client_id, CS=item.client_secret)
-
-############################# END REGISTER PART ##########################################
-
-#@app.route('/client')
-def client():
-     user = current_user()
-     item = Client(
-         client_id=gen_salt(40),
-         client_secret=gen_salt(50),
-         _redirect_uris='http://localhost:8000/authorized',
-         _default_scopes='email',
-         user_id=user.id,
-     )
-     db.session.add(item)
-     db.session.commit()
-     return jsonify(client_id=item.client_id,client_secret=item.client_secret)
+        return flask.render_template('users.html', USERNAME=username, NEWUSER=username, PASS=password, CI=item.client_id,
+                                     CS=item.client_secret)
 
 
-############################ ??? NO ESTAN SIENDO UTILIZADAS  #########################################
 
-@app.route('/api/enter', methods=('GET','POST'))
-def enter():
-    #username = request.json.get('username')
-    if request.method == 'POST':
-        username = request.form.get('username')
-        password = request.form.get('password')
-    #confirm = request.form.get('confirm-password')
-        if username is None or password is None:
-            abort(400)    # missing arguments
-        if User.query.filter_by(username=username).first() is not None:
-            #username="existente"
-            #password="noimporta"
-            abort(400)    # existing user
-    #user = User(username=username)
-    #user.hash_password(password)
-    #db.session.add(user)
-    #db.session.commit()
-    return flask.render_template('users.html', NEWUSER=username, PASS=password)
+
 
 
 @app.route('/api/login', methods=('GET', 'POST'))
@@ -351,35 +310,24 @@ def get_user(id):
         abort(400)
     return jsonify({'username': user.username})
 
-############################# ??? FIN NO ESTAN SIENDO UTILIZADAS  ####################################
 
-
-############################  LLAMADAS A OPERACIONES EN EL SERVIDOR  ##################################
-
-
-############################ RECEIVE GRANT AND IF IT IS IN DATABASE     ###############################
-############################  I RETURN A TOKEN_ACCESS AND REFRESH TOKEN ###############################
-
+####################### CREATE TOKE AFTER RECEIVING VALID GRANT #######################################
 
 @app.route('/api/token', methods=['GET', 'POST'])
 def sendtoken():
     datos=request.get_json()
     unakey = datos['code']
-    print "Recibido"
-    print unakey
     encontrado=Grant.query.filter_by(code=unakey).first()
 
     if encontrado is not None:
         present = datetime.now()
         if encontrado.expires > present:
-            print "el gran era valido"
             unClient=Client.query.filter_by(client_id=encontrado.client_id).first()
             unUser=User.query.filter_by(id=encontrado.user_id).first()
-            secondos=600
+            secondos=7200
             acct=gen_salt(40)
             accr=gen_salt(40)
             cuando=datetime.now() + timedelta(seconds=secondos)
-            print "cuando"
             vect=[]
             vect.append(cuando.strftime("%Y"))
             vect.append(cuando.strftime("%m"))
@@ -388,7 +336,6 @@ def sendtoken():
             vect.append(cuando.strftime("%M"))
             vect.append(cuando.strftime("%S"))
             if unClient is not None and unUser is not None:
-                print "entra para crear el token"
                 unToken=Token(user_id=unUser.id,
                               client_id=unClient.client_id,
                               token_type="bearer",
@@ -406,7 +353,6 @@ def sendtoken():
                                 "expires": vect})
 
             else:
-                print "no tuvo los datos para crear el token"
                 return jsonify({"access_token": "datos_erroneos",
                                 "token_type": "bearer",
                                 "refresh_token":
@@ -414,73 +360,59 @@ def sendtoken():
                                 "expires_in": 0})
 
         else:
-            print "el grant tiene la fecha vieja"
-            print "delete old grant"
-            print encontrado.expires
-            db.session.add(encontrado)
-            db.session.commit()
+            #db.session.add(encontrado)
+            #db.session.commit()
             return jsonify({"access_token": "era_un_code_viejo","token_type": "bearer", "refresh_token": "jajajajaj", "expires_in": 0})
 
-    else:
-        print "encontrando is none"
     return jsonify({"access_token": "invalid", "token_type": "bearer", "refresh_token": "invalid", "expires_in": 0})
 
-################### PUBLIC METHOD ########################
-@app.route('/ping',  methods=['GET'])
+########################################### PUBLIC METHOD: ANSWER TO PING ##############################################
+@app.route('/api/ping',  methods=('GET','POST'))
 def public_method():
-    return "OK"
-    return jsonify({'public': 'OK'})
+    hora=datetime.now()
+    return jsonify({'answer': 'OK', 'time' : hora})
 
-################### PRIVATE METHODS ###################################################################################
-@app.route('/api/whois', methods=['POST'])
+#################################################### PRIVATE METHODS ###################################################
+@app.route('/api/whois', methods=('GET','POST'))
 #@oauth.authorize_handler
 def whois():
-    nombre="expired"
+    nombre="Guest"
     if request.method == 'POST':
         datos = request.get_json()
-        print "se recibio esto"
         un_token = datos['access_token']
-        print un_token
         token_encontrado = Token.query.filter_by(access_token=un_token).first()
-        if token_encontrado is not None:
-            print "token encontrado"
+        ahora=datetime.now()
+        if token_encontrado is not None and token_encontrado.expires > ahora:
             usuario_encontrado = User.query.filter_by(id=token_encontrado.user_id).first()
-            print "usuario encontrado"
-            print usuario_encontrado.username
             nombre=usuario_encontrado.username
+
+    elif request.method == 'GET':
+        print "df"
+
     return jsonify({'username': nombre})
 
 
-#######################################################################################################################
-@app.route('/api/authorize', methods=['GET', 'POST'])
-def authorize(*args, **kwargs):
 
+###############################################    AUTHORIZE AT LOGIN    #############################################
+@app.route('/api/authorize', methods=['GET', 'POST'])
+# @oauth.authorize_handler
+def authorize(*args, **kwargs):
     if request.method == 'GET':
-        print "el recquest metod es "
-        print request.method
         client_id = request.args.get('client_id')
         session['client_id'] = client_id
         cliente_encontrado = Client.query.filter_by(client_id=client_id).first()
-        print "llego este cliente id"
-        print client_id
         session['user_id']=cliente_encontrado.user_id
         session['url']=cliente_encontrado._redirect_uris
         usuario_encontrado = User.query.filter_by(id=cliente_encontrado.user_id).first()
-
         nombre=usuario_encontrado.username
-
         return render_template('authorize.html', NOMBRE=nombre)
     if request.method == 'POST':
-        print "el request metod 2 es "
-        print request.method
         passplano = request.form.get('password')
         nameuser = request.form.get('nombre')
 
         usuario_encontrado = User.query.filter_by(username=nameuser).first()
         cliente_encontrado = Client.query.filter_by(user_id=usuario_encontrado.id).first()
         url_callback=cliente_encontrado._redirect_uris
-        print "se logueo con este usuario"
-        print usuario_encontrado.username
         if not usuario_encontrado.verify_password(passplano):
             session.clear()
             return redirect("http://www.google.com")
@@ -488,32 +420,33 @@ def authorize(*args, **kwargs):
             code=gen_salt(40)
             url = url_callback
             params = {'code': code}
-            print "user id"
-            print session['user_id']
-            print "client id"
-            print session['client_id']
             save_grant(session['user_id'],session['client_id'], code, url)
             return redirect("{0}?{1}".format(url, urllib.urlencode(params)))
 
 
 
+###############################################  UTILITY: FLUSH VARS    #############################################
 
 @app.route('/api/flush')
 def flushvars():
     Grant.query.delete()
     Token.query.delete()
+    Order.query.delete()
+    OrderItem.query.delete()
     #User.query.delete()
     #Client.query.delete()
     #Product.query.delete()
     return redirect('/api/printvars')
 
-
+###############################################  UTILITY: PRINT VARS    #############################################
 @app.route('/api/printvars')
 def printvariables():
     tokensi = []
     grants = []
     usuarios = []
     clientes = []
+    ordenes = []
+    itemsordenes = []
     cantidad=Grant.query.count()
     ahora = datetime.now()
     if cantidad >0 :
@@ -530,18 +463,15 @@ def printvariables():
                           'expire': entry.expires,
                           'estado': estado})
 
-
     canttoken = Token.query.count()
     if canttoken > 0:
         resultadotoken = Token.query.filter_by()
         entrytoken = resultadotoken.all()
-
-
         for entry in entrytoken:
             if entry.expires > ahora:
-                estado="valido"
+                estado="Valid"
             else:
-                estado="vencido"
+                estado="Deprecated"
 
             tokensi.append({'id': entry.id,
                             'user_id': entry.user_id,
@@ -575,9 +505,30 @@ def printvariables():
                              'user_id': entry.user_id,
                              'client_url': entry._redirect_uris
                             })
+    cantOrders = Order.query.count()
+    if cantOrders > 0:
+        resultadoordenes = Order.query.filter_by()
+        entryordenes = resultadoordenes.all()
 
+        for entry in entryordenes:
+            ordenes.append({'order_id': entry.order_id,
+                             'date': entry.date,
+                             'user_id': entry.user_id,
+                             'status': entry.status
+                            })
+    cantitemordenes = OrderItem.query.count()
+    if cantitemordenes > 0:
+        resultadoitemsordenes = OrderItem.query.filter_by()
+        entryitemsordenes = resultadoitemsordenes.all()
 
-    return flask.render_template('printvars.html', items=grants, toquens=tokensi, users=usuarios, clients=clientes)
+        for entry in entryitemsordenes:
+            itemsordenes.append({'orderitem_id': entry.orderitem_id,
+                             'order_id': entry.order_id,
+                             'product_id': entry.product_id,
+                             'quantity': entry.quantity
+                            })
+
+    return flask.render_template('printvars.html', items=grants, toquens=tokensi, users=usuarios, clients=clientes, orders=ordenes, ios=itemsordenes)
 
 
 
@@ -587,16 +538,15 @@ def Load_Data(file_name):
 
 Base = declarative_base()
 
+########################################  UTILITY: UPLOAD CSV TO PRODUCT TABLE    ######################################
 
 @app.route('/api/loaddata')
 def loaddata():
     registros=1
     t = time()
     try:
-        data = np.genfromtxt("/home/luciano/izmailovo/lab2store/super.csv", dtype=None, usemask=True, delimiter=",")
+        data = np.genfromtxt("/home/luciano/izmailovo/csv/super.csv", dtype=None, usemask=True, delimiter=",")
         for i in data:
-            print "registro "
-            print registros
             record = Product(**{
                 'name' : i[0],
                 'description' : i[1],
@@ -605,61 +555,13 @@ def loaddata():
             registros=registros+1
             db.session.add(record)
             db.session.commit()
-
-
-        #s.commit() #Attempt to commit all the records
     except:
-        print "algo fallo"
-        db.session.rollback() #Rollback the changes on error
-    #finally:
-    #    db.session.on.close() #Close the connection
-    print "Time elapsed: " + str(time() - t) + " s." #0.091s
-    return redirect('/')
-############################################################3
-from math import ceil
+        db.session.rollback()
+
+    print "Time elapsed: " + str(time() - t) + " s."
 
 
-class Pagination(object):
-
-    def __init__(self, page, per_page, total_count):
-        self.page = page
-        self.per_page = per_page
-        self.total_count = total_count
-
-    @property
-    def pages(self):
-        return int(ceil(self.total_count / float(self.per_page)))
-
-    @property
-    def has_prev(self):
-        return self.page > 1
-
-    @property
-    def has_next(self):
-        return self.page < self.pages
-
-    def iter_pages(self, left_edge=2, left_current=2,
-                   right_current=5, right_edge=2):
-        last = 0
-        for num in xrange(1, self.pages + 1):
-            if num <= left_edge or \
-               (num > self.page - left_current - 1 and \
-                num < self.page + right_current) or \
-               num > self.pages - right_edge:
-                if last + 1 != num:
-                    yield None
-                yield num
-                last = num
-
-
-
-def url_for_other_page(page):
-    args = request.view_args.copy()
-    args['page'] = page
-    return url_for(request.endpoint, **args)
-app.jinja_env.globals['url_for_other_page'] = url_for_other_page
-
-#######
+########################################### CLIENT SIDE PAGINATION    #############################################
 def get_products_for_page(page, PER_PAGE):
     productos = []
 
@@ -667,86 +569,343 @@ def get_products_for_page(page, PER_PAGE):
        desde = 0
     else:
         desde=(page-1)*PER_PAGE
-    print "desde"
-    print desde
     hasta=desde+PER_PAGE
-    print hasta
     resultado = Product.query.filter_by()
     entries = resultado.slice(desde,hasta).all()
-
-
-
     for entry in entries:
-        print entry.product_id
-        print entry.name
-
-        productos.append({'name': entry.name,
+        productos.append({'product_id': entry.product_id,
+                          'name': entry.name,
                           'description': entry.description,
                           'price': entry.price})
     return productos
 
 
+def get_orders_for_page(page, PER_PAGE,token):
+    orders = []
 
-##################################### REMOTA ##############################################33
-@app.route('/api/productos', defaults={'page': 1} , methods=('GET','POST'))
-@app.route('/api/productos/<int:page>', methods=('GET','POST'))
-#@login_required
-def show_productos(page):
-    print "method"
-    print request.method
+    if page == 1:
+       desde = 0
+    else:
+        desde=(page-1)*PER_PAGE
+    hasta=desde+PER_PAGE
+    resultado = Order.query.filter_by(user_id=token.user_id)
+    entries = resultado.slice(desde,hasta).all()
+    for entry in entries:
+        orders.append({'order_id': entry.order_id,
+                       'user_id': token.user_id,
+                       'date': entry.date,
+                       'status': entry.status})
+    return orders
+
+
+
+###############################################  CREATE A NEW ORDER    ###############################################
+
+@app.route('/api/order', methods=['POST'])
+def order():
+    number="expired"
     if request.method == 'POST':
         datos = request.get_json()
-        print "se recibio esto"
+        un_token = datos['access_token']
+        token_encontrado = Token.query.filter_by(access_token=un_token).first()
+        ahora=datetime.now()
+        if token_encontrado is not None and token_encontrado.expires > ahora:
+            usuario_encontrado = User.query.filter_by(id=token_encontrado.user_id).first()
+            ahora = datetime.now()
+            unaOrder = Order(user_id=usuario_encontrado.id, status="Unpaid", date=ahora)
+            db.session.add(unaOrder)
+            db.session.commit()
+            return jsonify({'order': unaOrder.order_id, 'date' : unaOrder.date})
+    return jsonify({'order': "null", 'date': "null"})
+
+##############################################  PAY AN ORDER    #######################################################
+
+#@app.route('/api/order', defaults={'order_n': 1, 'prod_n': 1}, methods=('GET', 'POST', 'DELETE'))
+@app.route('/api/order/<int:order_id>/billing', methods=('GET','POST'))
+def billing(order_id):
+    resumen = {'order_id': 0, 'user_id': 0, 'status': '', 'date': ''}
+    respuesta=[]
+    sum = {'suma': 0}
+    respuesta.append({'orderitem_id': '', 'order_id': '', 'product_id': '', 'quantity': 0})
+    if request.method == 'POST':
+        datos = request.get_json()
+        un_token = datos['access_token']
+        token_encontrado = Token.query.filter_by(access_token=un_token).first()
+        ahora=datetime.now()
+        if token_encontrado is not None and token_encontrado.expires > ahora:
+            usuario_encontrado = User.query.filter_by(id=token_encontrado.user_id).first()
+            order_encontrado = Order.query.filter_by(order_id=order_id).first()
+            if order_encontrado.user_id==usuario_encontrado.id and order_encontrado.status == "Unpaid":
+                order_encontrado.status="Paid"
+                resumen = {'order_id': order_encontrado.order_id, 'user_id': order_encontrado.user_id,'status': order_encontrado.status, 'date': order_encontrado.date}
+                suma=0
+                respuesta=order_items_in_order(order_id)
+                if request is not None:
+                    for item in respuesta:
+                        producto_encontrado = Product.query.filter_by(product_id=item['product_id']).first()
+                        if producto_encontrado is not None:
+                            suma_parcial=producto_encontrado.price*item['quantity']
+                            suma=suma+suma_parcial
+                sum = {'suma':suma}
+                return jsonify({'sum': sum, 'resume' : resumen, 'detail' : respuesta})
+        return jsonify({'sum': sum, 'resume': resumen, 'detail': respuesta})
+    return jsonify({'sum': sum, 'resume': resumen, 'detail': respuesta})
+
+###########################################  ORDER'S PAGINATION    ###############################################
+
+@app.route('/api/orders', defaults={'page': 1}, methods=('GET', 'POST'))
+@app.route('/api/orders/<int:page>', methods=('GET', 'POST'))
+def show_orders(page):
+    if request.method == 'POST':
+        datos = request.get_json()
         un_token = datos['access_token']
         user_per_page = datos['per_page']
         user_page = datos['page']
-        print un_token
-        print "numero de hoja"
-        print user_page
-        print "por pagina"
-        print user_per_page
         token_encontrado = Token.query.filter_by(access_token=un_token).first()
-        if token_encontrado is not None:
-            print "token encontrado"
+        ahora = datetime.now()
+        if token_encontrado is not None and token_encontrado.expires > ahora:
+            orders = get_orders_for_page(user_page, user_per_page,token_encontrado)
+            return jsonify(orders)
+        else:
+            return jsonify({'order_id' : 0, 'user_id':'old', 'date': 'old', 'status': 'old'})
+    else:
+        return jsonify({'order_id': 0, 'user_id':'unknown', 'date': 'unknown', 'status': 'unknown'})
+
+
+###############################################  ORDER'S DETAIL    ###############################################
+
+
+@app.route('/api/orderdetail', defaults={'order_id': 1}, methods=('GET', 'POST'))
+@app.route('/api/orderdetail/<int:order_id>', methods=('GET', 'POST'))
+def show_items_in_order(order_id):
+    if request.method == 'POST':
+        datos = request.get_json()
+        un_token = datos['access_token']
+        token_encontrado = Token.query.filter_by(access_token=un_token).first()
+        ahora = datetime.now()
+        if token_encontrado is not None and token_encontrado.expires > ahora:
+            listado=order_items_in_order_detailed(order_id)
+            return jsonify(listado)
+        else:
+            return jsonify({'description': '', 'order_id': '', 'price': '', 'orderitem_id': '', 'name': '', 'quantity': 0, 'product_id': ''})
+    else:
+        return jsonify({'description': '', 'order_id': '', 'price': '', 'orderitem_id': '', 'name': '', 'quantity': 0, 'product_id': ''})
+
+
+def order_items_in_order(order_id):
+    listoi = []
+    cant_orderitems = OrderItem.query.filter_by(order_id=order_id).count()
+    if cant_orderitems > 0:
+        resultadooi = OrderItem.query.filter_by(order_id=order_id)
+        entryoi = resultadooi.all()
+        for entry in entryoi:
+            listoi.append({'orderitem_id': entry.orderitem_id,
+                           'order_id': entry.order_id,
+                           'product_id': entry.product_id,
+                           'quantity': entry.quantity})
+        return listoi
+    else:
+        listoi.append({'orderitem_id': '', 'order_id': '', 'product_id': '', 'quantity': 0})
+        return listoi
+
+def order_items_in_order_detailed(order_id):
+    listoi = []
+    cant_orderitems = OrderItem.query.filter_by(order_id=order_id).count()
+    if cant_orderitems > 0:
+        resultadooi = OrderItem.query.filter_by(order_id=order_id)
+        entryoi = resultadooi.all()
+        for entry in entryoi:
+            producto_encontrado=Product.query.filter_by(product_id=entry.product_id).first()
+            if producto_encontrado is not None:
+                nombre=producto_encontrado.name
+                descripcion = producto_encontrado.description
+                listoi.append({'orderitem_id': entry.orderitem_id,
+                               'order_id': entry.order_id,
+                               'product_id': entry.product_id,
+                               'name' : nombre,
+                               'description' : descripcion,
+                               'price': producto_encontrado.price,
+                               'quantity': entry.quantity})
+        return listoi
+    else:
+        listoi.append({'orderitem_id': 0,
+                       'order_id': 0,
+                       'product_id': 0,
+                       'name' : '',
+                       'description' : '',
+                       'price': 0,
+                       'quantity': 0})
+        return listoi
+
+
+
+
+###############################################  PRODUCT'S METHODS    ###############################################
+
+
+def get_product_detail(product_id):
+    producto_encontrado = Product.query.filter_by(product_id=product_id).first()
+    if producto_encontrado is not None:
+        return ({'product_id': producto_encontrado.product_id,
+                 'name': producto_encontrado.name,
+                 'description': producto_encontrado.description,
+                 'price': producto_encontrado.price})
+
+    else:
+        return ({'product_id': 0,
+                 'name': '',
+                 'description': '',
+                 'price': 0})
+
+#############################################  PAGINATION AT CLIENT'S    ###############################################
+
+@app.route('/api/productos', defaults={'page': 1}, methods=('GET', 'POST'))
+@app.route('/api/productos/<int:page>', methods=('GET', 'POST'))
+def show_productos(page):
+    if request.method == 'POST':
+        datos = request.get_json()
+        un_token = datos['access_token']
+        user_per_page = datos['per_page']
+        user_page = datos['page']
+        token_encontrado = Token.query.filter_by(access_token=un_token).first()
+        ahora = datetime.now()
+        if token_encontrado is not None and token_encontrado.expires > ahora:
             productos = get_products_for_page(user_page, user_per_page)
-            print productos
             return jsonify(productos)
         else:
             return jsonify({'name': '', 'description': '', 'price': ''})
     else:
-        return jsonify({'name': '', 'description': '','price': ''})
+        return jsonify({'name': '', 'description': '', 'price': ''})
+
+
+####################### ADD A PRODUCT OR QUANTITY TO AN EXISTING AND NON PAID ORDER ####################################
+
+
+#@app.route('/api/ordermod', defaults={'order_n': 1, 'prod_n': 1}, methods=('GET', 'POST', 'DELETE'))
+@app.route('/api/ordermod/<int:order_n>/product/<int:prod_n>', methods=('GET', 'POST', 'DELETE'))
+def add_product_order(order_n, prod_n):
+    if request.method == 'DELETE':
+        valor=-1
+    if request.method == 'POST':
+        valor=1
+    datos = request.get_json()
+    un_token = datos['access_token']
+    token_encontrado = Token.query.filter_by(access_token=un_token).first()
+    ahora = datetime.now()
+    if token_encontrado is not None and token_encontrado.expires > ahora:
+        usuario_encontrado = User.query.filter_by(id=token_encontrado.user_id).first()
+        order_encontrado = Order.query.filter_by(order_id=order_n).first()
+        if order_encontrado is not None:
+            if order_encontrado.status=="Unpaid":
+                orderitems=OrderItem.query.filter_by(product_id=prod_n).count()
+                respuesta=add_product_in_order(order_n, prod_n,valor)
+                return jsonify(respuesta)
+            else:
+                return jsonify({'order_id': 0, 'orderitem_id': 0, 'product_id': 0, 'quantity': 0})
+        else:
+            return jsonify({'order_id': 0, 'orderitem_id': 0, 'product_id': 0, 'quantity': 0})
+    else:
+        return jsonify({'order_id': 0, 'orderitem_id': 0, 'product_id': 0, 'quantity': 0})
 
 
 
-##################################### LOCAL ##############################################33
-@app.route('/api/products', defaults={'page': 1})
-@app.route('/api/products/<int:page>')
-def show_products(page):
-    count = Product.query.count()
-    print "cuantos productos"
-    print count
 
-    productos = get_products_for_page(page, PER_PAGE)
-    print productos
-    if not productos and page != 1:
-        abort(404)
-    pagination = Pagination(page, PER_PAGE, count)
-    return render_template('products.html', pagination=pagination, products=productos )
+def add_product_in_order(order_id,product_id, qty):
+    order_encontrado = Order.query.filter_by(order_id=order_id).first()
+    producto_encontrado = Product.query.filter_by(product_id=product_id).first()
+    if order_encontrado is not None and producto_encontrado is not None:
+        if qty != 0:
+            orderitems = OrderItem.query.filter_by(order_id=order_encontrado.order_id).filter_by(product_id=product_id).count()
+            if orderitems == 0 and qty>0:
+                oitem = OrderItem(order_id=order_id, product_id=product_id, quantity=qty)
+                un_id=oitem.orderitem_id
+                db.session.add(oitem)
+                db.session.commit()
+                return {'orderitem_id': un_id, 'order_id': order_id, 'product_id': product_id, 'quantity': qty }
+            elif orderitems>0 and qty>0:
+                unorderitem = OrderItem.query.filter_by(order_id=order_encontrado.order_id).filter_by(product_id=product_id).first()
+                val=unorderitem.quantity+qty
+                unorderitem.quantity=val
+                db.session.add(unorderitem)
+                db.session.commit()
+                return {'orderitem_id': unorderitem.orderitem_id, 'order_id': order_id, 'product_id': product_id, 'quantity': val}
+            elif orderitems > 0 and qty < 0:
+                unorderitem = OrderItem.query.filter_by(order_id=order_encontrado.order_id).filter_by(product_id=product_id).first()
+                if unorderitem.quantity>=qty:
+                    if (unorderitem.quantity + qty) >= 0:
+                        val = unorderitem.quantity + qty
+                        unorderitem.quantity = val
+                    else:
+                        val = 0
+                    db.session.add(unorderitem)
+                    db.session.commit()
+                    return {'orderitem_id': unorderitem.orderitem_id, 'order_id': order_id, 'product_id': product_id,
+                         'quantity': val}
+                return {'orderitem_id': unorderitem.orderitem_id,
+                                'order_id': unorderitem.order_id,
+                                'product_id': unorderitem.product_id,  'quantity': unorderitem.quantity}
+
+            return {'order_id': '1', 'user_id': '2', 'date': '3', 'status': '4'}
+        elif qty==0:
+            unorderitem = OrderItem.query.filter_by(order_id=order_encontrado.order_id).filter_by(product_id=product_id).first()
+            return {'orderitem_id': unorderitem.orderitem_id,
+                            'order_id': unorderitem.order_id,
+                            'product_id': unorderitem.product_id, 'quantity': unorderitem.quantity}
+
+    else:
+        return {'orderitem_id': 0, 'order_id': 0,'product_id': 0,  'quantity': 0}
 
 
-##############################################################################3
+
+
+
+# @app.route('/api/productos/items', defaults={'page': 1} , methods=('GET','POST'))
+# @app.route('/api/productos/items/<int:page>', methods=('GET','POST'))
+# #@login_required
+# def show_item(page):
+#     if request.method == 'POST':
+#         datos = request.get_json()
+#         un_token = datos['access_token']
+#         user_per_page = datos['per_page']
+#         user_page = datos['page']
+#         token_encontrado = Token.query.filter_by(access_token=un_token).first()
+#         ahora=datetime.now()
+#         if token_encontrado is not None and token_encontrado.expires > ahora:
+#             productos = get_products_for_page(user_page, user_per_page)
+#             return jsonify(productos)
+#         else:
+#             return jsonify({'order_id': '', 'date': '', 'status': ''})
+#     else:
+#             return jsonify({'order_id': '', 'date': '', 'status': ''})
+
+#################################  DETAIL ON A SPECIFIC PRODUCT  #######################################################
+@app.route('/api/productos/detail/<int:product_id>', methods=['POST'])
+def show_product(product_id):
+    if request.method == 'POST':
+        datos = request.get_json()
+        un_token = datos['access_token']
+        token_encontrado = Token.query.filter_by(access_token=un_token).first()
+        ahora = datetime.now()
+        if token_encontrado is not None and token_encontrado.expires > ahora:
+            productos = get_product_detail(product_id)
+            return jsonify(productos)
+        else:
+            return jsonify({'product_id': '', 'name': '', 'description': '', 'price': ''})
+    else:
+        return jsonify({'product_id': '', 'name': '', 'description': '', 'price': ''})
+
+
+
+############################################    INITILIZATION    #######################################################
 
 @app.route('/')
 def index():
     session.clear
-    #state = ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(32))
-    #login_session['state'] = state
     reg = User.query.count()
     on = 1
     cli = Client.query.count()
     return flask.render_template('index.html',REGISTERED=reg,ONLINE=on,CLIENTS=cli)
 
 if __name__ == '__main__':
-    #if not os.path.exists('db.sqlite'):
     db.create_all()
     app.run(debug=True)

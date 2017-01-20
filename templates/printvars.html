@@ -152,6 +152,46 @@
             {% endfor %}
             </tbody>
         </table>
+                <br><br>
+        <div align="center">ORDERS
+        <table border="1">
+            <tbody>
+                <tr>
+                    <td>order_id&nbsp;</td>
+                    <td>user_id&nbsp;</td>
+                    <td>date&nbsp;</td>
+                    <td>status&nbsp;</td>
+                </tr>
+                {% for order in orders %}
+                <tr>
+                    <td>{{ order.order_id }}&nbsp;</td>
+                    <td>{{ order.user_id }}&nbsp;</td>
+                    <td>{{ order.date }}&nbsp;</td>
+                    <td>{{ order.status }}&nbsp;</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+         <br><br>
+        <div align="center">ITEMS_ORDERS
+        <table border="1">
+            <tbody>
+                <tr>
+                    <td>orderitem_id&nbsp;</td>
+                    <td>order_id&nbsp;</td>
+                    <td>product_id&nbsp;</td>
+                    <td>quantity&nbsp;</td>
+                </tr>
+                {% for io in ios %}
+                <tr>
+                    <td>{{ io.orderitem_id }}&nbsp;</td>
+                    <td>{{ io.order_id }}&nbsp;</td>
+                    <td>{{ io.product_id }}&nbsp;</td>
+                    <td>{{ io.quantity }}&nbsp;</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
         <br>
          <a class="btn btn-lg btn-success" href="/api/flush" role="button">Flush Vars</a>&nbsp;&nbsp;
          <a class="btn btn-lg btn-success" href="/api/printvars" role="button">Reload</a>

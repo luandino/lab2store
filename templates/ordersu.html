@@ -36,12 +36,14 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">RSOI Lab N°2</a>
+          <a class="navbar-brand" href="/">RSOI Lab N°2</a>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
+            <li><a href="/ping">Ping</a></li>
             <li><a href="/me">Me?</a></li>
             <li><a href="/productos">Products List</a></li>
+            <li><a href="/orderlist">Orders List</a></li>
             <li><a href="/order">Make an Order</a></li>
             <li><a href="/logout">Logout</a></li>
           </ul>
@@ -61,24 +63,31 @@
     <table border="1">
             <tbody>
                 <tr>
-                    <td>Nombre&nbsp;</td>
-                    <td>Descripcion&nbsp;</td>
-                    <td>Precio&nbsp;</td>
+                    <td>Order_Id&nbsp;</td>
+                    <td>User_Id&nbsp;</td>
+                    <td>Date&nbsp;</td>
+                    <td>status&nbsp;</td>
+
                 </tr>
     {% block content %}
-            {% for product in products %}
+
+            {% for order in orders %}
                 <tr>
-                 <td>
-                {{ product.name }}
+                 <td><a href="/orderdetail/{{order.order_id }}">
+                {{ order.order_id }}</a>
+                </td>
+                <td>
+                {{ order.user_id }}
+                </td>
+                 <td><a href="/orderdetail/{{ order.order_id }}">
+                {{ order.date }}</a>
                 </td>
                  <td>
-                {{ product.description }}
-                </td>
-                 <td>
-                {{ product.price }}
+                {{ order.status }}
                 </td>
                  </tr>
             {% endfor %}
+
                </tbody>
         </table>
         </div>
