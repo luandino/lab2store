@@ -11,6 +11,7 @@ import urllib
 API_KEY = ''
 CLIENT_ID = '2JycAQbLawSXfPsBgk3WDXmZ9WuXPSVYhd9EKU9W' #anna
 CLIENT_SECRET = '16n6kAQrSzDjb8TCuYxw9N1SADinxXu19YP51hl71teEVaeDlD' #anna
+SERVER_ADDR ="http://139.59.145.248"
 
 #REDIRECT_URI = 'http://localhost:5003/callback' #luciano
 REDIRECT_URI = 'http://localhost:5004/callback' #anna
@@ -29,7 +30,7 @@ def refresh_token(refresh_token):
     return results['access_token']
 
 def get_profile(access_token):
-    url = "http://flask-enviroment.z2spn3xrd3.us-west-2.elasticbeanstalk.com/api/whois"
+    url = SERVER_ADDR + "/api/whois"
     params = {'access_token': access_token}
     headers = {'content-type': 'application/json'}
     r = requests.post(url, data=json.dumps(params), headers=headers)
@@ -39,7 +40,7 @@ def get_profile(access_token):
 
 def code_for_token(code):
     headers = {'content-type': 'application/json'}
-    url = "http://flask-enviroment.z2spn3xrd3.us-west-2.elasticbeanstalk.com/api/token"
+    url = SERVER_ADDR + "/api/token"
     params = {
         'code': code,
         'client_id': CLIENT_ID,
@@ -56,7 +57,7 @@ def code_for_token(code):
     return (access_token, refresh_token,expires_in, expires)
 
 def auth_url():
-    url = "http://flask-enviroment.z2spn3xrd3.us-west-2.elasticbeanstalk.com/api/authorize"
+    url = SERVER_ADDR + "/api/authorize"
     params = {
         'response_type': 'code',
         'client_id': CLIENT_ID,
@@ -71,7 +72,7 @@ def auth_url():
 
 # def code_for_token(code):
 #     headers = {'content-type': 'application/json'}
-#     url = "http://flask-enviroment.z2spn3xrd3.us-west-2.elasticbeanstalk.com/api/token"
+#     url = SERVER_ADDR + "/api/token"
 #     params = {
 #         'code': code,
 #         'client_id': CLIENT_ID,
@@ -89,7 +90,7 @@ def auth_url():
 
 
 def query_orders(page, PER_PAGE,access_token):
-    url = "http://flask-enviroment.z2spn3xrd3.us-west-2.elasticbeanstalk.com/api/orders"
+    url = SERVER_ADDR + "/api/orders"
     params = {'access_token': access_token, 'page': page, 'per_page' : PER_PAGE}
     headers = {'content-type': 'application/json'}
     r = requests.post(url, data=json.dumps(params), headers=headers)
@@ -97,7 +98,7 @@ def query_orders(page, PER_PAGE,access_token):
     return results
 
 def query_items_in_order_detailed(order_id,access_token):
-    url = "http://flask-enviroment.z2spn3xrd3.us-west-2.elasticbeanstalk.com/api/orderdetail/"+str(order_id)
+    url = SERVER_ADDR + "/api/orderdetail/"+str(order_id)
     params = {'access_token': access_token}
     headers = {'content-type': 'application/json'}
     r = requests.post(url, data=json.dumps(params), headers=headers)
@@ -105,7 +106,7 @@ def query_items_in_order_detailed(order_id,access_token):
     return results
 
 def add_product_to_order(order_id,product_id,access_token,val):
-    url = "http://flask-enviroment.z2spn3xrd3.us-west-2.elasticbeanstalk.com/api/ordermod/"+str(order_id)+"/product/"+str(product_id)
+    url = SERVER_ADDR + "/api/ordermod/"+str(order_id)+"/product/"+str(product_id)
     params = {'access_token': access_token}
     headers = {'content-type': 'application/json'}
     if val==1:
@@ -116,7 +117,7 @@ def add_product_to_order(order_id,product_id,access_token,val):
     return results
 
 def query_product_detail(product_id,access_token):
-    url = "http://flask-enviroment.z2spn3xrd3.us-west-2.elasticbeanstalk.com/api/productos/detail/"+str(product_id)
+    url = SERVER_ADDR + "/api/productos/detail/"+str(product_id)
     params = {'access_token': access_token}
     headers = {'content-type': 'application/json'}
     r = requests.post(url, data=json.dumps(params), headers=headers)
@@ -125,7 +126,7 @@ def query_product_detail(product_id,access_token):
     return results
 
 def query_products(page, PER_PAGE,access_token):
-    url = "http://flask-enviroment.z2spn3xrd3.us-west-2.elasticbeanstalk.com/api/productos"
+    url = SERVER_ADDR + "/api/productos"
     params = {'access_token': access_token, 'page': page, 'per_page' : PER_PAGE}
     headers = {'content-type': 'application/json'}
     r = requests.post(url, data=json.dumps(params), headers=headers)
@@ -133,7 +134,7 @@ def query_products(page, PER_PAGE,access_token):
     return results
 
 def pay_order(order_id, access_token):
-    url = "http://flask-enviroment.z2spn3xrd3.us-west-2.elasticbeanstalk.com/api/order/"+str(order_id)+"/billing"
+    url = SERVER_ADDR + "/api/order/"+str(order_id)+"/billing"
     params = {'access_token': access_token}
     headers = {'content-type': 'application/json'}
     r = requests.post(url, data=json.dumps(params), headers=headers)
@@ -141,7 +142,7 @@ def pay_order(order_id, access_token):
     return results
 
 def pool_server():
-    url = "http://flask-enviroment.z2spn3xrd3.us-west-2.elasticbeanstalk.com/api/ping"
+    url = SERVER_ADDR + "/api/ping"
     try:
         r = requests.post(url)
         results = json.loads(r.text)
@@ -153,7 +154,7 @@ def pool_server():
     return results
 
 def make_order(access_token):
-    url = "http://flask-enviroment.z2spn3xrd3.us-west-2.elasticbeanstalk.com/api/order"
+    url = SERVER_ADDR + "/api/order"
     params = {'access_token': access_token}
     headers = {'content-type': 'application/json'}
     r = requests.post(url, data=json.dumps(params), headers=headers)

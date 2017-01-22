@@ -15,6 +15,8 @@ def create_app():
   Bootstrap(app)
   return app
 
+
+SERVER_ADDR = "http://139.59.145.248"
 app = Flask(__name__)
 
 
@@ -156,7 +158,7 @@ def show_order(page):
         inicio=page*PPER_PAGE_ORDER
         fin=inicio+PPER_PAGE_ORDER
     for i in range(inicio,fin):
-        url_order="http://flask-enviroment.z2spn3xrd3.us-west-2.elasticbeanstalk.com/api/orderdetail/"+str(i)
+        url_order=SERVER_ADDR+str(i)
         arrayurls.append({'url': url_order})
     pagination = Pagination(page, PPER_PAGE_ORDER, count)
     return render_template('ordersu.html', pagination=pagination, orders=orders, urls=arrayurls )
