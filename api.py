@@ -23,24 +23,24 @@ PER_PAGE = 10
 
 
 
-app = Flask(__name__)
-app.config['SECRET_KEY'] = 'rewrewtrtrewsadsdwredsadrqeqw'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
-app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+application = Flask(__name__)
+application.config['SECRET_KEY'] = 'rewrewtrtrewsadsdwredsadrqeqw'
+application.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
+application.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
+application.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
 
-db = SQLAlchemy(app)
+db = SQLAlchemy(application)
 auth = HTTPBasicAuth()
 
-def create_app():
-  app = Flask(__name__)
-  Bootstrap(app)
-  return app
+#def create_app():
+application = app = Flask(__name__)
+#  Bootstrap(application)
+#  return application
 
-@app.route('/favicon.ico')
+@application.route('/favicon.ico')
 def favicon():
-    return send_from_directory(os.path.join(app.root_path, 'static'),'favicon.ico', mimetype='image/vnd.microsoft.icon')
+    return send_from_directory(os.path.join(application.root_path, 'static'),'favicon.ico', mimetype='image/vnd.microsoft.icon')
 
 ########################################## DATABASE DEFINITION AND FUNCTIONS ##########################################
 
@@ -88,12 +88,12 @@ class User(db.Model):
         return pwd_context.verify(password, self.password_hash)
 
     def generate_auth_token(self, expiration=600):
-        s = Serializer(app.config['SECRET_KEY'], expires_in=expiration)
+        s = Serializer(application.config['SECRET_KEY'], expires_in=expiration)
         return s.dumps({'id': self.id})
 
     @staticmethod
     def verify_auth_token(token):
-        s = Serializer(app.config['SECRET_KEY'])
+        s = Serializer(application.config['SECRET_KEY'])
         try:
             data = s.loads(token)
         except SignatureExpired:
@@ -261,7 +261,7 @@ def save_token(token, request, *args, **kwargs):
 
 ####################### REGISTER: USER, PASSWORD AND CALLBACK ADDRESS IN CLIENT #######################################
 
-@app.route('/api/register', methods=('GET','POST'))
+@application.route('/api/register', methods=('GET','POST'))
 def users():
     if request.method == 'POST':
         username = request.form.get('username')
@@ -297,13 +297,13 @@ def users():
 
 
 
-@app.route('/api/login', methods=('GET', 'POST'))
+@application.route('/api/login', methods=('GET', 'POST'))
 def login():
     if request.method == 'GET':
         return flask.render_template('/client/login_with_registration.html')
 
 
-@app.route('/api/users/<int:id>')
+@application.route('/api/users/<int:id>')
 def get_user(id):
     user = User.query.get(id)
     if not user:
@@ -313,7 +313,7 @@ def get_user(id):
 
 ####################### CREATE TOKE AFTER RECEIVING VALID GRANT #######################################
 
-@app.route('/api/token', methods=['GET', 'POST'])
+@application.route('/api/token', methods=['GET', 'POST'])
 def sendtoken():
     datos=request.get_json()
     unakey = datos['code']
@@ -367,13 +367,13 @@ def sendtoken():
     return jsonify({"access_token": "invalid", "token_type": "bearer", "refresh_token": "invalid", "expires_in": 0})
 
 ########################################### PUBLIC METHOD: ANSWER TO PING ##############################################
-@app.route('/api/ping',  methods=('GET','POST'))
+@application.route('/api/ping',  methods=('GET','POST'))
 def public_method():
     hora=datetime.now()
     return jsonify({'answer': 'OK', 'time' : hora})
 
 #################################################### PRIVATE METHODS ###################################################
-@app.route('/api/whois', methods=('GET','POST'))
+@application.route('/api/whois', methods=('GET','POST'))
 #@oauth.authorize_handler
 def whois():
     nombre="Guest"
@@ -394,7 +394,7 @@ def whois():
 
 
 ###############################################    AUTHORIZE AT LOGIN    #############################################
-@app.route('/api/authorize', methods=['GET', 'POST'])
+@application.route('/api/authorize', methods=['GET', 'POST'])
 # @oauth.authorize_handler
 def authorize(*args, **kwargs):
     if request.method == 'GET':
@@ -427,7 +427,7 @@ def authorize(*args, **kwargs):
 
 ###############################################  UTILITY: FLUSH VARS    #############################################
 
-@app.route('/api/flush')
+@application.route('/api/flush')
 def flushvars():
     Grant.query.delete()
     Token.query.delete()
@@ -439,7 +439,7 @@ def flushvars():
     return redirect('/api/printvars')
 
 ###############################################  UTILITY: PRINT VARS    #############################################
-@app.route('/api/printvars')
+@application.route('/api/printvars')
 def printvariables():
     tokensi = []
     grants = []
@@ -540,7 +540,7 @@ Base = declarative_base()
 
 ########################################  UTILITY: UPLOAD CSV TO PRODUCT TABLE    ######################################
 
-@app.route('/api/loaddata')
+@application.route('/api/loaddata')
 def loaddata():
     registros=1
     t = time()
@@ -601,7 +601,7 @@ def get_orders_for_page(page, PER_PAGE,token):
 
 ###############################################  CREATE A NEW ORDER    ###############################################
 
-@app.route('/api/order', methods=['POST'])
+@application.route('/api/order', methods=['POST'])
 def order():
     number="expired"
     if request.method == 'POST':
@@ -620,8 +620,8 @@ def order():
 
 ##############################################  PAY AN ORDER    #######################################################
 
-#@app.route('/api/order', defaults={'order_n': 1, 'prod_n': 1}, methods=('GET', 'POST', 'DELETE'))
-@app.route('/api/order/<int:order_id>/billing', methods=('GET','POST'))
+#@application.route('/api/order', defaults={'order_n': 1, 'prod_n': 1}, methods=('GET', 'POST', 'DELETE'))
+@application.route('/api/order/<int:order_id>/billing', methods=('GET','POST'))
 def billing(order_id):
     resumen = {'order_id': 0, 'user_id': 0, 'status': '', 'date': ''}
     respuesta=[]
@@ -653,8 +653,8 @@ def billing(order_id):
 
 ###########################################  ORDER'S PAGINATION    ###############################################
 
-@app.route('/api/orders', defaults={'page': 1}, methods=('GET', 'POST'))
-@app.route('/api/orders/<int:page>', methods=('GET', 'POST'))
+@application.route('/api/orders', defaults={'page': 1}, methods=('GET', 'POST'))
+@application.route('/api/orders/<int:page>', methods=('GET', 'POST'))
 def show_orders(page):
     if request.method == 'POST':
         datos = request.get_json()
@@ -675,8 +675,8 @@ def show_orders(page):
 ###############################################  ORDER'S DETAIL    ###############################################
 
 
-@app.route('/api/orderdetail', defaults={'order_id': 1}, methods=('GET', 'POST'))
-@app.route('/api/orderdetail/<int:order_id>', methods=('GET', 'POST'))
+@application.route('/api/orderdetail', defaults={'order_id': 1}, methods=('GET', 'POST'))
+@application.route('/api/orderdetail/<int:order_id>', methods=('GET', 'POST'))
 def show_items_in_order(order_id):
     if request.method == 'POST':
         datos = request.get_json()
@@ -759,8 +759,8 @@ def get_product_detail(product_id):
 
 #############################################  PAGINATION AT CLIENT'S    ###############################################
 
-@app.route('/api/productos', defaults={'page': 1}, methods=('GET', 'POST'))
-@app.route('/api/productos/<int:page>', methods=('GET', 'POST'))
+@application.route('/api/productos', defaults={'page': 1}, methods=('GET', 'POST'))
+@application.route('/api/productos/<int:page>', methods=('GET', 'POST'))
 def show_productos(page):
     if request.method == 'POST':
         datos = request.get_json()
@@ -782,7 +782,7 @@ def show_productos(page):
 
 
 #@app.route('/api/ordermod', defaults={'order_n': 1, 'prod_n': 1}, methods=('GET', 'POST', 'DELETE'))
-@app.route('/api/ordermod/<int:order_n>/product/<int:prod_n>', methods=('GET', 'POST', 'DELETE'))
+@application.route('/api/ordermod/<int:order_n>/product/<int:prod_n>', methods=('GET', 'POST', 'DELETE'))
 def add_product_order(order_n, prod_n):
     if request.method == 'DELETE':
         valor=-1
@@ -859,8 +859,8 @@ def add_product_in_order(order_id,product_id, qty):
 
 
 
-# @app.route('/api/productos/items', defaults={'page': 1} , methods=('GET','POST'))
-# @app.route('/api/productos/items/<int:page>', methods=('GET','POST'))
+# @application.route('/api/productos/items', defaults={'page': 1} , methods=('GET','POST'))
+# @application.route('/api/productos/items/<int:page>', methods=('GET','POST'))
 # #@login_required
 # def show_item(page):
 #     if request.method == 'POST':
@@ -879,7 +879,7 @@ def add_product_in_order(order_id,product_id, qty):
 #             return jsonify({'order_id': '', 'date': '', 'status': ''})
 
 #################################  DETAIL ON A SPECIFIC PRODUCT  #######################################################
-@app.route('/api/productos/detail/<int:product_id>', methods=['POST'])
+@application.route('/api/productos/detail/<int:product_id>', methods=['POST'])
 def show_product(product_id):
     if request.method == 'POST':
         datos = request.get_json()
@@ -898,7 +898,7 @@ def show_product(product_id):
 
 ############################################    INITILIZATION    #######################################################
 
-@app.route('/')
+@application.route('/')
 def index():
     session.clear
     reg = User.query.count()
@@ -908,4 +908,4 @@ def index():
 
 if __name__ == '__main__':
     db.create_all()
-    app.run(debug=True)
+    application.run(host='0.0.0.0')

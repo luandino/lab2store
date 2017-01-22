@@ -1,20 +1,13 @@
 import flask
 from flask import Flask, url_for, render_template, redirect, request
 from flask import session as login_session
-
 import requests
-#import dateutil.parser
-#import random
-#import string
-import json
 import os
 from flask import send_from_directory
 from datetime import datetime, timedelta
-
 from storeutils import pool_server, pay_order, make_order, add_product_to_order,query_items_in_order_detailed,query_orders
 from storeutils import query_products, Pagination, query_product_detail
 from storeutils import get_profile,refresh_token,code_for_token, auth_url
-### NEEDED TO USE BOOTSTRAP'S TEMPLATES  ###
 from flask_bootstrap import Bootstrap
 
 def create_app():
@@ -261,4 +254,4 @@ def callback():
 
 if __name__ == '__main__':
     app.secret_key = 'twtrtretrefsdgfgvbcvbbvbcviutiujgkhj'
-    app.run(host='127.0.0.1', port=5004, use_reloader=False)
+    app.run(host='127.0.0.1', port=5004)
