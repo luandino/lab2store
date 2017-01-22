@@ -74,7 +74,7 @@ def show_products(page):
         inicio=page*PER_PAGE
         fin=inicio+PER_PAGE
     for i in range(inicio,fin):
-        url_product="http://localhost:5000/api/product/item/"+str(i)
+        url_product="http://flask-enviroment.z2spn3xrd3.us-west-2.elasticbeanstalk.com/api/product/item/"+str(i)
         arrayurls.append({'url': url_product})
     pagination = Pagination(page, PER_PAGE, count)
     return render_template('productsu.html', pagination=pagination, products=productos, urls=arrayurls )
@@ -156,7 +156,7 @@ def show_order(page):
         inicio=page*PPER_PAGE_ORDER
         fin=inicio+PPER_PAGE_ORDER
     for i in range(inicio,fin):
-        url_order="http://localhost:5000/api/orderdetail/"+str(i)
+        url_order="http://flask-enviroment.z2spn3xrd3.us-west-2.elasticbeanstalk.com/api/orderdetail/"+str(i)
         arrayurls.append({'url': url_order})
     pagination = Pagination(page, PPER_PAGE_ORDER, count)
     return render_template('ordersu.html', pagination=pagination, orders=orders, urls=arrayurls )

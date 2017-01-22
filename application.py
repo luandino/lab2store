@@ -907,5 +907,6 @@ def index():
     return flask.render_template('index.html',REGISTERED=reg,ONLINE=on,CLIENTS=cli)
 
 if __name__ == '__main__':
+    application.secret_key = 'supercalifragilisticoespialidoso'
     db.create_all()
     application.run(host='0.0.0.0')
