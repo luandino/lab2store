@@ -14,17 +14,15 @@ import urllib
 import numpy as np
 from numpy import genfromtxt
 from time import time
-#from math import ceil
-
 from sqlalchemy.ext.declarative import declarative_base
-#from flask_bootstrap import Bootstrap
 from flask import abort
+import os
 PER_PAGE = 10
 
 
 
 application = Flask(__name__)
-application.config['SECRET_KEY'] = 'rewrewtrtrewsadsdwredsadrqeqw'
+#application.config['SECRET_KEY'] = 'rewrewtrtrewsadsdwredsadrqeqw'
 application.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
 application.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
 application.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
@@ -912,7 +910,9 @@ def about():
 
     return flask.render_template('about.html')
 
+
+
 if __name__ == '__main__':
-    application.secret_key = 'supercalifragilisticoespialidoso'
+    application.secret_key = os.urandom(24)
     db.create_all()
     application.run(host='0.0.0.0')
