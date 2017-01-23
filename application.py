@@ -14,10 +14,10 @@ import urllib
 import numpy as np
 from numpy import genfromtxt
 from time import time
-from math import ceil
+#from math import ceil
 
 from sqlalchemy.ext.declarative import declarative_base
-from flask_bootstrap import Bootstrap
+#from flask_bootstrap import Bootstrap
 from flask import abort
 PER_PAGE = 10
 
@@ -905,6 +905,12 @@ def index():
     on = 1
     cli = Client.query.count()
     return flask.render_template('index.html',REGISTERED=reg,ONLINE=on,CLIENTS=cli)
+
+
+@application.route('/api/about')
+def about():
+
+    return flask.render_template('about.html')
 
 if __name__ == '__main__':
     application.secret_key = 'supercalifragilisticoespialidoso'

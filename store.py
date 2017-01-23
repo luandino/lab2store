@@ -18,6 +18,7 @@ def create_app():
 
 SERVER_ADDR = "http://139.59.145.248"
 app = Flask(__name__)
+app.secret_key = 'twtrtretrefsdgfgvbcvbbvbcviutiujgkhj'
 
 
 ############################################################################################################
@@ -255,5 +256,5 @@ def callback():
     return render_template("indexu.html", NOW=ahora,WHO=user, STATUS=estado, EXPIRES=expiral)
 
 if __name__ == '__main__':
-    app.secret_key = 'twtrtretrefsdgfgvbcvbbvbcviutiujgkhj'
+
     app.run(host='127.0.0.1', port=5004)

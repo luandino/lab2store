@@ -13,6 +13,8 @@ CLIENT_ID = '2JycAQbLawSXfPsBgk3WDXmZ9WuXPSVYhd9EKU9W' #anna
 CLIENT_SECRET = '16n6kAQrSzDjb8TCuYxw9N1SADinxXu19YP51hl71teEVaeDlD' #anna
 SERVER_ADDR ="http://139.59.145.248"
 
+#SERVER_ADDR ="http://localhost:5000"
+
 #REDIRECT_URI = 'http://localhost:5003/callback' #luciano
 REDIRECT_URI = 'http://localhost:5004/callback' #anna
 
