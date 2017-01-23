@@ -16,7 +16,15 @@ def create_app():
   return app
 
 
-SERVER_ADDR = "http://139.59.145.248"
+#CAM = "http://grulicueva.homenet.org/~luciano/lab2store"
+CAM = ""
+
+#SERVER_ADDR = "http://tiendas-env.wicjtrbqed.us-west-2.elasticbeanstalk.com"
+#SERVER_ADDR = "http://negocio-env.2jqp5pvbnf.us-west-2.elasticbeanstalk.com"
+#SERVER_ADDR = "http://139.59.145.248"
+
+SERVER_ADDR ="http://138.68.67.49"
+
 app = Flask(__name__)
 app.secret_key = 'twtrtretrefsdgfgvbcvbbvbcviutiujgkhj'
 
@@ -27,15 +35,15 @@ app.secret_key = 'twtrtretrefsdgfgvbcvbbvbcviutiujgkhj'
 
 
 
-#CLIENT_ID = '8fYXj1n3orTosTM1221uWYYmz1maiyjKmEm56uzE' #luciano
-#CLIENT_SECRET = 'GkcauiqxiN9BpA5EScOxtw3CCzenOdKqci2LYEc4cRPNfAK2Vj' #luciano
+CLIENT_ID = '8fYXj1n3orTosTM1221uWYYmz1maiyjKmEm56uzE' #luciano
+CLIENT_SECRET = 'GkcauiqxiN9BpA5EScOxtw3CCzenOdKqci2LYEc4cRPNfAK2Vj' #luciano
 
 API_KEY = ''
-CLIENT_ID = '2JycAQbLawSXfPsBgk3WDXmZ9WuXPSVYhd9EKU9W' #anna
-CLIENT_SECRET = '16n6kAQrSzDjb8TCuYxw9N1SADinxXu19YP51hl71teEVaeDlD' #anna
+#CLIENT_ID = '2JycAQbLawSXfPsBgk3WDXmZ9WuXPSVYhd9EKU9W' #anna
+#CLIENT_SECRET = '16n6kAQrSzDjb8TCuYxw9N1SADinxXu19YP51hl71teEVaeDlD' #anna
 
-#REDIRECT_URI = 'http://localhost:5003/callback' #luciano
-REDIRECT_URI = 'http://localhost:5004/callback' #anna
+REDIRECT_URI = CAM+'callback' #luciano
+#REDIRECT_URI = 'http://localhost:5004/callback' #anna
 
 ### AS I RECEIVED A WARNING OF LACK OF FAVICON, I CREATE ONE AND PUT IN THE PATH ###
 
@@ -80,7 +88,8 @@ def show_products(page):
         url_product="http://flask-enviroment.z2spn3xrd3.us-west-2.elasticbeanstalk.com/api/product/item/"+str(i)
         arrayurls.append({'url': url_product})
     pagination = Pagination(page, PER_PAGE, count)
-    return render_template('productsu.html', pagination=pagination, products=productos, urls=arrayurls )
+
+    return render_template('productsu.html', pagination=pagination, products=productos, urls=arrayurls, CAMINO=CAM )
 
 
 #####################################  HERE FUNCTIONS ###########################################
@@ -96,7 +105,9 @@ def index():
         img = "status_offline.gif"
     elif result == "OK":
         img = "server_online.gif"
-    return flask.render_template('indexoff.html', url=auth_url(), WHO="Guest", IMG=img)
+
+
+    return flask.render_template('indexoff.html', CAMINO=CAM, url=auth_url(), WHO="Guest", IMG=img)
 
 
 
@@ -113,7 +124,7 @@ def makeanorder():
         return redirect(url_for("index"))
     tk = login_session['access_token']
     order=make_order(tk)
-    return flask.render_template('orderu.html', NUMORDER=order["order"], FECHA=order["date"])
+    return flask.render_template('orderu.html', NUMORDER=order["order"], FECHA=order["date"], CAMINO=CAM)
 
 @app.route('/orderdetail', defaults={'order_id': 1})
 @app.route('/orderdetail/<int:order_id>')
@@ -126,7 +137,7 @@ def orderdetail(order_id):
     else:
         for item in itemlist:
             suma=item['quantity']*item['price']+suma
-    return render_template('orderdetail.html', items=itemlist, order=order_id, price=suma)
+    return render_template('orderdetail.html', items=itemlist, order=order_id, price=suma, CAMINO=CAM)
 
 
 @app.route('/orderdetail/<int:order_id>/<string:val>/<int:product_id>')
@@ -137,7 +148,7 @@ def addproduct_to_order(order_id,product_id,val):
     else:
         valor=0
     resu=add_product_to_order(order_id,product_id,token,valor)
-    url="/orderdetail/"+str(order_id)
+    url=CAM+"/orderdetail/"+str(order_id)
     return redirect(url)
 
 PPER_PAGE_ORDER = 4
@@ -162,7 +173,7 @@ def show_order(page):
         url_order=SERVER_ADDR+str(i)
         arrayurls.append({'url': url_order})
     pagination = Pagination(page, PPER_PAGE_ORDER, count)
-    return render_template('ordersu.html', pagination=pagination, orders=orders, urls=arrayurls )
+    return render_template('ordersu.html', pagination=pagination, orders=orders, urls=arrayurls, CAMINO=CAM )
 
 @app.route('/payorder', methods=['POST'])
 def payorder():
@@ -170,7 +181,7 @@ def payorder():
     if request.method == 'POST':
         order_id = request.form.get('order_id')
         resu = pay_order(order_id, token)
-        url = "/orderlist"
+        url = CAM+"/orderlist"
         return redirect(url)
 
 #######################################################################################################################
@@ -184,7 +195,7 @@ def addnewproduct_to_order():
         product_id=int(product_id)
         if type(product_id) == int:
             resu=add_product_to_order(order_id,product_id,token,1)
-        url="/orderdetail/"+str(order_id)
+        url=CAM+"/orderdetail/"+str(order_id)
         return redirect(url)
 
 @app.route('/productos/item', defaults={'product_id': 1})
@@ -195,7 +206,7 @@ def productdetail(product_id):
     #print "itelmlis"
     #print itemlist['price']
     return render_template('productdetu.html', price=itemlist['price'], product_id=itemlist['product_id'],
-                           name=itemlist['name'], description=itemlist['description'] )
+                           name=itemlist['name'], description=itemlist['description'], CAMINO=CAM )
 
 #######################################################################################################################
 
@@ -213,7 +224,7 @@ def askaboutme():
         sta = "Valid"
     else:
         sta = "Expired"
-    return flask.render_template('usersu.html', USERNAME=unnombre, EXPIRE=exp, STATUS=sta)
+    return flask.render_template('usersu.html', USERNAME=unnombre, EXPIRE=exp, STATUS=sta, CAMINO=CAM)
 
 @app.route('/ping')
 def ping():
@@ -223,7 +234,8 @@ def ping():
         img = "status_offline.gif"
     elif result=="OK":
         img = "server_online.gif"
-    return flask.render_template('indexoff.html', url=auth_url(), WHO="Guest", IMG=img)
+
+    return flask.render_template('indexoff.html', url=auth_url(), WHO="Guest", IMG=img, CAMINO=CAM)
 
 @app.route('/logout')
 def logout():
@@ -253,8 +265,8 @@ def callback():
         estado = "Valid"
     else:
         estado = "Deprecated"
-    return render_template("indexu.html", NOW=ahora,WHO=user, STATUS=estado, EXPIRES=expiral)
+    return render_template("indexu.html", NOW=ahora,WHO=user, STATUS=estado, EXPIRES=expiral, CAMINO=CAM)
 
 if __name__ == '__main__':
 
-    app.run(host='127.0.0.1', port=5004)
+    app.run(host='127.0.0.1', port=5003)

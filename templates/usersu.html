@@ -12,10 +12,10 @@
     <title>RSOI Lab N°2</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="../../static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ CAMINO }}/static/css/bootstrap.min.css" rel="stylesheet">
 
 
-    <link href="../../static/css/starter-template.css" rel="stylesheet">
+    <link href="{{ CAMINO }}/static/css/starter-template.css" rel="stylesheet">
 
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -38,12 +38,12 @@
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-            <li><a href="/ping">Ping</a></li>
-            <li><a href="/me">Me?</a></li>
-            <li><a href="/productos">Products List</a></li>
-            <li><a href="/orderlist">Orders List</a></li>
-            <li><a href="/order">Make an Order</a></li>
-            <li><a href="/logout">Logout</a></li>
+            <li><a href="{{ CAMINO }}/ping">Ping</a></li>
+            <li><a href="{{ CAMINO }}/me">Me?</a></li>
+            <li><a href="{{ CAMINO }}/productos">Products List</a></li>
+            <li><a href="{{ CAMINO }}/orderlist">Orders List</a></li>
+            <li><a href="{{ CAMINO }}/order">Make an Order</a></li>
+            <li><a href="{{ CAMINO }}/logout">Logout</a></li>
           </ul>
         </div>
       </div>
@@ -80,7 +80,7 @@
             </tbody>
         </table>
         <br><br>
-         <a class="btn btn-lg btn-success" href="/me" role="button">UPDATE</a>
+         <a class="btn btn-lg btn-success" href="{{ CAMINO }}/me" role="button">UPDATE</a>
     </div>
 
     <!-- Bootstrap core JavaScript
@@ -88,6 +88,6 @@
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script>window.jQuery || document.write('<script src="js/vendor/jquery.min.js"><\/script>')</script>
-    <script src="static/js/bootstrap.min.js"></script>
+    <script src="{{ CAMINO }}/static/js/bootstrap.min.js"></script>
   </body>
 </html>

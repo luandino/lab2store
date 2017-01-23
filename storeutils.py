@@ -5,18 +5,22 @@ import os
 from math import ceil
 import urllib
 
-#CLIENT_ID = '8fYXj1n3orTosTM1221uWYYmz1maiyjKmEm56uzE' #luciano
-#CLIENT_SECRET = 'GkcauiqxiN9BpA5EScOxtw3CCzenOdKqci2LYEc4cRPNfAK2Vj' #luciano
+CLIENT_ID = '8fYXj1n3orTosTM1221uWYYmz1maiyjKmEm56uzE' #luciano
+CLIENT_SECRET = 'GkcauiqxiN9BpA5EScOxtw3CCzenOdKqci2LYEc4cRPNfAK2Vj' #luciano
 
 API_KEY = ''
-CLIENT_ID = '2JycAQbLawSXfPsBgk3WDXmZ9WuXPSVYhd9EKU9W' #anna
-CLIENT_SECRET = '16n6kAQrSzDjb8TCuYxw9N1SADinxXu19YP51hl71teEVaeDlD' #anna
-SERVER_ADDR ="http://139.59.145.248"
-
+#CLIENT_ID = '2JycAQbLawSXfPsBgk3WDXmZ9WuXPSVYhd9EKU9W' #anna
+#CLIENT_SECRET = '16n6kAQrSzDjb8TCuYxw9N1SADinxXu19YP51hl71teEVaeDlD' #anna
+#SERVER_ADDR ="http://139.59.145.248"
+#SERVER_ADDR = "http://tiendas-env.wicjtrbqed.us-west-2.elasticbeanstalk.com"
 #SERVER_ADDR ="http://localhost:5000"
-
+#SERVER_ADDR = "http://negocio-env.2jqp5pvbnf.us-west-2.elasticbeanstalk.com"
 #REDIRECT_URI = 'http://localhost:5003/callback' #luciano
-REDIRECT_URI = 'http://localhost:5004/callback' #anna
+SERVER_ADDR ="http://138.68.67.49"
+
+#CAM = "http://grulicueva.homenet.org/~luciano/lab2store"
+CAM = ""
+REDIRECT_URI = CAM+'/callback' #anna
 
 ### AUTH BUT WITHOUT THE NEED TO RE-AUTH ###
 def refresh_token(refresh_token):

@@ -20,21 +20,25 @@ import os
 PER_PAGE = 10
 
 
-
-application = Flask(__name__)
-#application.config['SECRET_KEY'] = 'rewrewtrtrewsadsdwredsadrqeqw'
+#def create_app():
+application = app = Flask(__name__)
 application.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
 application.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
 application.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+
+    #Bootstrap(application)
+    #Session(application)
+#    return application
+
+#application = Flask(__name__)
+#application.config['SECRET_KEY'] = 'rewrewtrtrewsadsdwredsadrqeqw'
+
 
 
 db = SQLAlchemy(application)
 auth = HTTPBasicAuth()
 
-#def create_app():
-application = app = Flask(__name__)
-#  Bootstrap(application)
-#  return application
+
 
 @application.route('/favicon.ico')
 def favicon():
@@ -907,12 +911,12 @@ def index():
 
 @application.route('/api/about')
 def about():
-
     return flask.render_template('about.html')
 
 
 
 if __name__ == '__main__':
+
     application.secret_key = os.urandom(24)
     db.create_all()
     application.run(host='0.0.0.0')
