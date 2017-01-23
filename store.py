@@ -33,7 +33,8 @@ app.secret_key = 'twtrtretrefsdgfgvbcvbbvbcviutiujgkhj'
 
 
 
-
+#CLIENT_ID = 'iKMTIIGS8YpYYu2QPYiLslo6gVphWrkHIVakR85w' #peter
+#CLIENT_SECRET = 'yFb43Qp5eaCvp7OLPGi8RhDPJdzVUztzbbYUcrXDmqFnnNYVJb' #peter
 
 CLIENT_ID = '8fYXj1n3orTosTM1221uWYYmz1maiyjKmEm56uzE' #luciano
 CLIENT_SECRET = 'GkcauiqxiN9BpA5EScOxtw3CCzenOdKqci2LYEc4cRPNfAK2Vj' #luciano

@@ -8,6 +8,9 @@ import urllib
 CLIENT_ID = '8fYXj1n3orTosTM1221uWYYmz1maiyjKmEm56uzE' #luciano
 CLIENT_SECRET = 'GkcauiqxiN9BpA5EScOxtw3CCzenOdKqci2LYEc4cRPNfAK2Vj' #luciano
 
+#CLIENT_ID = 'iKMTIIGS8YpYYu2QPYiLslo6gVphWrkHIVakR85w' #peter
+#CLIENT_SECRET = 'yFb43Qp5eaCvp7OLPGi8RhDPJdzVUztzbbYUcrXDmqFnnNYVJb' #peter
+
 API_KEY = ''
 #CLIENT_ID = '2JycAQbLawSXfPsBgk3WDXmZ9WuXPSVYhd9EKU9W' #anna
 #CLIENT_SECRET = '16n6kAQrSzDjb8TCuYxw9N1SADinxXu19YP51hl71teEVaeDlD' #anna

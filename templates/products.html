@@ -12,10 +12,10 @@
     <title>RSOI Lab N°2</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="../../static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ CAMINO }}/static/css/bootstrap.min.css" rel="stylesheet">
 
 
-    <link href="../../static/css/starter-template.css" rel="stylesheet">
+    <link href="{{ CAMINO }}/static/css/starter-template.css" rel="stylesheet">
 
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -40,8 +40,8 @@
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-            <li><a href="/api/about">About</a></li>
-            <li><a href="/api/login">Login</a></li>
+            <li><a href="{{ CAMINO }}/api/about">About</a></li>
+            <li><a href="{{ CAMINO }}/api/login">Login</a></li>
             <li>Logged user: {{ USERNAME }}</li>
           </ul>
         </div>
@@ -68,10 +68,10 @@
     {% block content %}
             {% for product in products %}
                 <tr>
-                 <td><a href="http://localhost:5000/api/products/item/{{ product.product_id }}">
+                 <td><a href="{{ CAMINO }}/api/products/item/{{ product.product_id }}">
                 {{ product.product_id }}</a>
                 </td>
-                 <td><a href="http://localhost:5000/api/products/item/{{ product.product_id }}">
+                 <td><a href="{{ CAMINO }}/api/products/item/{{ product.product_id }}">
                 {{ product.name }}</a>
                 </td>
                  <td>
@@ -115,6 +115,6 @@
     <!-- Placed at the end of the document so the pages load faster -->
      <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>-->
      <!--<script>window.jQuery || document.write('<script src="js/vendor/jquery.min.js"><\/script>')</script>-->
-    <script src="../static/js/bootstrap.min.js"></script>
+    <script src="{{ CAMINO }}/static/js/bootstrap.min.js"></script>
   </body>
 </html>
