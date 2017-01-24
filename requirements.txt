@@ -10,7 +10,7 @@ argparse==1.2.1
 click==6.7
 dominate==2.3.1
 itsdangerous==0.24
-numpy==1.12.0
+#numpy==1.12.0
 passlib==1.7.0
 requests==2.12.5
 visitor==0.1.3

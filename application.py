@@ -547,7 +547,8 @@ def loaddata():
     registros=1
     t = time()
     try:
-        data = np.genfromtxt("/home/luciano/izmailovo/csv/super.csv", dtype=None, usemask=True, delimiter=",")
+        #data = np.genfromtxt("/home/luciano/izmailovo/csv/super.csv", dtype=None, usemask=True, delimiter=",")
+        data=''
         for i in data:
             record = Product(**{
                 'name' : i[0],
