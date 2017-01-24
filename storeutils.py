@@ -5,11 +5,11 @@ import os
 from math import ceil
 import urllib
 
-#CLIENT_ID = '8fYXj1n3orTosTM1221uWYYmz1maiyjKmEm56uzE' #luciano
-#CLIENT_SECRET = 'GkcauiqxiN9BpA5EScOxtw3CCzenOdKqci2LYEc4cRPNfAK2Vj' #luciano
+CLIENT_ID = '8fYXj1n3orTosTM1221uWYYmz1maiyjKmEm56uzE' #luciano
+CLIENT_SECRET = 'GkcauiqxiN9BpA5EScOxtw3CCzenOdKqci2LYEc4cRPNfAK2Vj' #luciano
 
-CLIENT_ID = 'iKMTIIGS8YpYYu2QPYiLslo6gVphWrkHIVakR85w' #peter
-CLIENT_SECRET = 'yFb43Qp5eaCvp7OLPGi8RhDPJdzVUztzbbYUcrXDmqFnnNYVJb' #peter
+#CLIENT_ID = 'iKMTIIGS8YpYYu2QPYiLslo6gVphWrkHIVakR85w' #peter
+#CLIENT_SECRET = 'yFb43Qp5eaCvp7OLPGi8RhDPJdzVUztzbbYUcrXDmqFnnNYVJb' #peter
 
 API_KEY = ''
 #CLIENT_ID = '2JycAQbLawSXfPsBgk3WDXmZ9WuXPSVYhd9EKU9W' #anna
@@ -19,7 +19,9 @@ API_KEY = ''
 #SERVER_ADDR ="http://localhost:5000"
 #SERVER_ADDR = "http://negocio-env.2jqp5pvbnf.us-west-2.elasticbeanstalk.com"
 #REDIRECT_URI = 'http://localhost:5003/callback' #luciano
-SERVER_ADDR ="http://138.68.67.49"
+
+SERVER_ADDR ="http://localhost:5000"
+#SERVER_ADDR ="http://138.68.67.49"
 
 #CAM = "http://grulicueva.homenet.org/~luciano/lab2store"
 CAM = ""
