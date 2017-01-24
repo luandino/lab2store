@@ -5,12 +5,3 @@ language: python
 env:
   - FLASK=0.12
 
-services:
-  - docker
-
-script:
-  - wget -O- http://travis.debian.net/script.sh | sh -
-
-branches:
-  except:
-    - /^debian\/\d/
