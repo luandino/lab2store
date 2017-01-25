@@ -25,8 +25,8 @@ API_KEY = ''
 
 SERVER_ADDR ="http://139.59.145.248"
 
-#CAM = "http://grulicueva.homenet.org/~luciano/lab2store"
-CAM = ""
+CAM = "http://grulicueva.homenet.org/~luciano/lab2store"
+#CAM = ""
 REDIRECT_URI = CAM+'/callback' #anna
 
 ### AUTH BUT WITHOUT THE NEED TO RE-AUTH ###
