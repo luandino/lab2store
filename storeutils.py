@@ -20,10 +20,10 @@ API_KEY = ''
 #SERVER_ADDR = "http://negocio-env.2jqp5pvbnf.us-west-2.elasticbeanstalk.com"
 #REDIRECT_URI = 'http://localhost:5003/callback' #luciano
 
-#SERVER_ADDR ="http://localhost:5000"
+SERVER_ADDR ="http://localhost:5000"
 #SERVER_ADDR ="http://138.68.67.49" # DIGITALOCEAN 2 CPU
 
-SERVER_ADDR ="http://139.59.145.248" # DIGITALOCEAN 1 CPU
+#SERVER_ADDR ="http://139.59.145.248" # DIGITALOCEAN 1 CPU
 
 #CAM = "http://grulicueva.homenet.org/~luciano/lab2store"
 CAM = ""

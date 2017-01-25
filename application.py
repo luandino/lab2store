@@ -407,11 +407,14 @@ def authorize(*args, **kwargs):
         print "imprimio?"
         session['client_id'] = client_id
         cliente_encontrado = Client.query.filter_by(client_id=client_id).first()
-        session['user_id']=cliente_encontrado.user_id
-        session['url']=cliente_encontrado._redirect_uris
-        usuario_encontrado = User.query.filter_by(id=cliente_encontrado.user_id).first()
-        nombre=usuario_encontrado.username
-        return render_template('authorize.html', NOMBRE=nombre)
+        if cliente_encontrado is not None:
+            session['user_id']=cliente_encontrado.user_id
+            session['url']=cliente_encontrado._redirect_uris
+            usuario_encontrado = User.query.filter_by(id=cliente_encontrado.user_id).first()
+            nombre=usuario_encontrado.username
+            return render_template('authorize.html', NOMBRE=nombre)
+        else:
+            return redirect("http://www.google.com")
     if request.method == 'POST':
         passplano = request.form.get('password')
         nameuser = request.form.get('nombre')
