@@ -19,8 +19,6 @@ from flask import abort
 import os
 PER_PAGE = 10
 
-
-#def create_app():
 application = app = Flask(__name__)
 application.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
 application.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
