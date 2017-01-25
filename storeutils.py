@@ -5,11 +5,11 @@ import os
 from math import ceil
 import urllib
 
-#CLIENT_ID = 'TRq20Yb5xutn9T8cjxU7MjlJRUrwqi0VwCevobaP' #luciano
-#CLIENT_SECRET = 'u1pKCkRmd0QTWmww9v43a7zv8ymtNN6OdYdR5puO4ZviDCWZzI' #luciano
+CLIENT_ID = 'TRq20Yb5xutn9T8cjxU7MjlJRUrwqi0VwCevobaP' #luciano
+CLIENT_SECRET = 'u1pKCkRmd0QTWmww9v43a7zv8ymtNN6OdYdR5puO4ZviDCWZzI' #luciano
 
-CLIENT_ID = 'l7ePTstSGglimGHhpE2Ogtks3KkCa5jzk8Vj2qQ1' #peter
-CLIENT_SECRET = '5VUhu0AglAJozVGTtcXb8Um6sfInMvU6Y1c6kSYCsqWZEQ6Whl' #peter
+#CLIENT_ID = 'l7ePTstSGglimGHhpE2Ogtks3KkCa5jzk8Vj2qQ1' #peter
+#CLIENT_SECRET = '5VUhu0AglAJozVGTtcXb8Um6sfInMvU6Y1c6kSYCsqWZEQ6Whl' #peter
 
 
 
@@ -27,8 +27,8 @@ API_KEY = ''
 
 SERVER_ADDR ="http://139.59.145.248" # DIGITALOCEAN 1 CPU
 
-CAM = "http://grulicueva.homenet.org/~luciano/lab2store"
-#CAM = ""
+#CAM = "http://grulicueva.homenet.org/~luciano/lab2store"
+CAM = ""
 REDIRECT_URI = CAM+'/callback' #anna
 
 ### AUTH BUT WITHOUT THE NEED TO RE-AUTH ###
@@ -118,6 +118,8 @@ def query_items_in_order_detailed(order_id,access_token):
     headers = {'content-type': 'application/json'}
     r = requests.post(url, data=json.dumps(params), headers=headers)
     results = json.loads(r.text)
+    print "se recibio esto"
+    print results
     return results
 
 def add_product_to_order(order_id,product_id,access_token,val):

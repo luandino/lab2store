@@ -689,9 +689,9 @@ def show_items_in_order(order_id):
             listado=order_items_in_order_detailed(order_id)
             return jsonify(listado)
         else:
-            return jsonify({'description': '', 'order_id': '', 'price': '', 'orderitem_id': '', 'name': '', 'quantity': 0, 'product_id': ''})
+            return jsonify({'description': '', 'order_id': '', 'price': '', 'orderitem_id': '', 'name': '', 'quantity': 0, 'product_id': 0})
     else:
-        return jsonify({'description': '', 'order_id': '', 'price': '', 'orderitem_id': '', 'name': '', 'quantity': 0, 'product_id': ''})
+        return jsonify({'description': '', 'order_id': '', 'price': '', 'orderitem_id': '', 'name': '', 'quantity': 0, 'product_id': 0})
 
 
 def order_items_in_order(order_id):
