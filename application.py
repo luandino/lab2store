@@ -12,7 +12,7 @@ from datetime import timedelta
 from datetime import datetime
 import urllib
 #import numpy as np
-from numpy import genfromtxt
+#from numpy import genfromtxt
 from time import time
 from sqlalchemy.ext.declarative import declarative_base
 from flask import abort
