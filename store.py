@@ -132,16 +132,24 @@ def makeanorder():
 @app.route('/orderdetail/<int:order_id>')
 def orderdetail(order_id):
     token=login_session.get('access_token')
-    itemlist = query_items_in_order_detailed(order_id,token)
-    suma = 0
-    print "item"
-    print itemlist[0]['product_id']
-    if itemlist[0]['product_id'] == 0 or itemlist[0]['product_id'] is None:
-        itemlist=""
+    print "token es"
+    print token
+    print "order id es"
+    print order_id
+    if token is not None:
+        itemlist = query_items_in_order_detailed(order_id,token)
+        suma = 0
+        print "item"
+        print itemlist[0]['product_id']
+        if itemlist[0]['product_id'] == 0 or itemlist[0]['product_id'] is None:
+            itemlist=""
+        else:
+            for item in itemlist:
+                suma=item['quantity']*item['price']+suma
+        return render_template('orderdetail.html', items=itemlist, order=order_id, price=suma, CAMINO=CAM)
     else:
-        for item in itemlist:
-            suma=item['quantity']*item['price']+suma
-    return render_template('orderdetail.html', items=itemlist, order=order_id, price=suma, CAMINO=CAM)
+        return "token no llego"
+
 
 
 @app.route('/orderdetail/<int:order_id>/<string:val>/<int:product_id>')

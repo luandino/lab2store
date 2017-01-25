@@ -677,8 +677,8 @@ def show_orders(page):
 ###############################################  ORDER'S DETAIL    ###############################################
 
 
-@application.route('/api/orderdetail', defaults={'order_id': 1}, methods=('GET', 'POST'))
-@application.route('/api/orderdetail/<int:order_id>', methods=('GET', 'POST'))
+@application.route('/api/orderdetail', defaults={'order_id': 1}, methods=['POST'])
+@application.route('/api/orderdetail/<int:order_id>', methods=['POST'])
 def show_items_in_order(order_id):
     if request.method == 'POST':
         datos = request.get_json()
