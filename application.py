@@ -442,8 +442,8 @@ def flushvars():
     Token.query.delete()
     Order.query.delete()
     OrderItem.query.delete()
-    #User.query.delete()
-    #Client.query.delete()
+    User.query.delete()
+    Client.query.delete()
     #Product.query.delete()
     return redirect('/api/printvars')
 
@@ -921,10 +921,8 @@ def index():
 def about():
     return flask.render_template('about.html')
 
-
+application.secret_key = os.urandom(24)
 
 if __name__ == '__main__':
-
-    application.secret_key = os.urandom(24)
     db.create_all()
     application.run(host='0.0.0.0')

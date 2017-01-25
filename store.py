@@ -19,9 +19,14 @@ def create_app():
 CAM = "http://grulicueva.homenet.org/~luciano/lab2store"
 #CAM = ""
 
-#SERVER_ADDR = "http://tiendas-env.wicjtrbqed.us-west-2.elasticbeanstalk.com"
-#SERVER_ADDR = "http://negocio-env.2jqp5pvbnf.us-west-2.elasticbeanstalk.com"
-#SERVER_ADDR = "http://139.59.145.248"
+#CLIENT_ID = 'TRq20Yb5xutn9T8cjxU7MjlJRUrwqi0VwCevobaP' #luciano
+#CLIENT_SECRET = 'u1pKCkRmd0QTWmww9v43a7zv8ymtNN6OdYdR5puO4ZviDCWZzI' #luciano
+
+
+API_KEY = ''
+
+CLIENT_ID = 'l7ePTstSGglimGHhpE2Ogtks3KkCa5jzk8Vj2qQ1' #peter
+CLIENT_SECRET = '5VUhu0AglAJozVGTtcXb8Um6sfInMvU6Y1c6kSYCsqWZEQ6Whl' #peter
 
 SERVER_ADDR ="http://139.59.145.248" # DIGITALOCEAN 1 CPU
 
@@ -36,18 +41,11 @@ app.secret_key = 'twtrtretrefsdgfgvbcvbbvbcviutiujgkhj'
 
 
 
-#CLIENT_ID = 'iKMTIIGS8YpYYu2QPYiLslo6gVphWrkHIVakR85w' #peter
-#CLIENT_SECRET = 'yFb43Qp5eaCvp7OLPGi8RhDPJdzVUztzbbYUcrXDmqFnnNYVJb' #peter
 
-CLIENT_ID = '8fYXj1n3orTosTM1221uWYYmz1maiyjKmEm56uzE' #luciano
-CLIENT_SECRET = 'GkcauiqxiN9BpA5EScOxtw3CCzenOdKqci2LYEc4cRPNfAK2Vj' #luciano
 
-API_KEY = ''
-#CLIENT_ID = '2JycAQbLawSXfPsBgk3WDXmZ9WuXPSVYhd9EKU9W' #anna
-#CLIENT_SECRET = '16n6kAQrSzDjb8TCuYxw9N1SADinxXu19YP51hl71teEVaeDlD' #anna
+
 
 REDIRECT_URI = CAM+'callback' #luciano
-#REDIRECT_URI = 'http://localhost:5004/callback' #anna
 
 ### AS I RECEIVED A WARNING OF LACK OF FAVICON, I CREATE ONE AND PUT IN THE PATH ###
 
