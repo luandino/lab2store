@@ -687,7 +687,8 @@ def show_items_in_order(order_id):
         ahora = datetime.now()
         if token_encontrado is not None and token_encontrado.expires > ahora:
             listado=order_items_in_order_detailed(order_id)
-            return jsonify(listado)
+            return "una cerveza"
+            #return jsonify(listado)
         else:
             return "pichi"
             #return jsonify([{'description': '', 'order_id': '', 'price': '', 'orderitem_id': '', 'name': 'nada2', 'quantity': 0, 'product_id': 0}])
