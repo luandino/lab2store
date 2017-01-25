@@ -136,7 +136,7 @@ def orderdetail(order_id):
     suma = 0
     print "item"
     print itemlist[0]['product_id']
-    if itemlist[0]['product_id'] ==0:
+    if itemlist[0]['product_id'] == 0 or itemlist[0]['product_id'] is None:
         itemlist=""
     else:
         for item in itemlist:
