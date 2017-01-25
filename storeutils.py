@@ -131,6 +131,8 @@ def add_product_to_order(order_id,product_id,access_token,val):
     else:
         r = requests.delete(url, data=json.dumps(params), headers=headers)
     results = json.loads(r.text)
+    print "axa"
+    print results
     return results
 
 def query_product_detail(product_id,access_token):

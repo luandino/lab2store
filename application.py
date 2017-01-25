@@ -680,18 +680,18 @@ def show_orders(page):
 @application.route('/api/orderdetail', defaults={'order_id': 1}, methods=('GET', 'POST'))
 @application.route('/api/orderdetail/<int:order_id>', methods=('GET', 'POST'))
 def show_items_in_order(order_id):
-    if request.method == 'POST':
-        datos = request.get_json()
-        un_token = datos['access_token']
-        token_encontrado = Token.query.filter_by(access_token=un_token).first()
-        ahora = datetime.now()
-        if token_encontrado is not None and token_encontrado.expires > ahora:
-            listado=order_items_in_order_detailed(order_id)
-            return jsonify(listado)
-        else:
-            return jsonify([{'description': '', 'order_id': '', 'price': '', 'orderitem_id': '', 'name': 'nada2', 'quantity': 0, 'product_id': 0}])
+    #if request.method == 'POST' or request.method == 'GET':
+    datos = request.get_json()
+    un_token = datos['access_token']
+    token_encontrado = Token.query.filter_by(access_token=un_token).first()
+    ahora = datetime.now()
+    if token_encontrado is not None and token_encontrado.expires > ahora:
+        listado=order_items_in_order_detailed(order_id)
+        return jsonify(listado)
     else:
-        return jsonify([{'description': '', 'order_id': '', 'price': '', 'orderitem_id': '', 'name': 'nada1', 'quantity': 0, 'product_id': 0}])
+        return jsonify([{'description': '', 'order_id': '', 'price': '', 'orderitem_id': '', 'name': 'nada2', 'quantity': 0, 'product_id': 0}])
+    #else:
+    #     return jsonify([{'description': '', 'order_id': '', 'price': '', 'orderitem_id': '', 'name': 'nada1', 'quantity': 0, 'product_id': 0}])
 
 
 def order_items_in_order(order_id):

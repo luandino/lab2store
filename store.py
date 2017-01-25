@@ -197,6 +197,10 @@ def addnewproduct_to_order():
         product_id = request.form.get('product_id')
         order_id = request.form.get('order_id')
         product_id=int(product_id)
+        print "product"
+        print product_id
+        print "order"
+        print order_id
         if type(product_id) == int:
             resu=add_product_to_order(order_id,product_id,token,1)
         url=CAM+"/orderdetail/"+str(order_id)
