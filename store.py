@@ -16,17 +16,17 @@ def create_app():
   return app
 
 
-#CAM = "http://grulicueva.homenet.org/~luciano/lab2store"
-CAM = ""
+CAM = "http://grulicueva.homenet.org/~luciano/lab2store"
+#CAM = ""
 
 #SERVER_ADDR = "http://tiendas-env.wicjtrbqed.us-west-2.elasticbeanstalk.com"
 #SERVER_ADDR = "http://negocio-env.2jqp5pvbnf.us-west-2.elasticbeanstalk.com"
 #SERVER_ADDR = "http://139.59.145.248"
 
-#SERVER_ADDR ="http://139.59.145.248" # DIGITALOCEAN 1 CPU
+SERVER_ADDR ="http://139.59.145.248" # DIGITALOCEAN 1 CPU
 
 #SERVER_ADDR ="http://138.68.67.49" # DIGITALOCEAN 2 CPU
-SERVER_ADDR ="http://localhost:5000"
+#SERVER_ADDR ="http://localhost:5000"
 
 app = Flask(__name__)
 app.secret_key = 'twtrtretrefsdgfgvbcvbbvbcviutiujgkhj'
