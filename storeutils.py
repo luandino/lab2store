@@ -114,6 +114,8 @@ def query_orders(page, PER_PAGE,access_token):
 
 def query_items_in_order_detailed(order_id,access_token):
     url = SERVER_ADDR + "/api/orderdetail/"+str(order_id)
+    print "url"
+    print url
     params = {'access_token': access_token}
     headers = {'content-type': 'application/json'}
     r = requests.post(url, data=json.dumps(params), headers=headers)

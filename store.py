@@ -212,6 +212,8 @@ def addnewproduct_to_order():
         if type(product_id) == int:
             resu=add_product_to_order(order_id,product_id,token,1)
         url=CAM+"/orderdetail/"+str(order_id)
+        print "veamos url"
+        print url
         return redirect(url)
 
 @app.route('/productos/item', defaults={'product_id': 1})
