@@ -21,7 +21,9 @@ API_KEY = ''
 #REDIRECT_URI = 'http://localhost:5003/callback' #luciano
 
 #SERVER_ADDR ="http://localhost:5000"
-SERVER_ADDR ="http://138.68.67.49" # DIGITALOCEAN
+#SERVER_ADDR ="http://138.68.67.49" # DIGITALOCEAN
+
+SERVER_ADDR ="http://139.59.145.248"
 
 #CAM = "http://grulicueva.homenet.org/~luciano/lab2store"
 CAM = ""
