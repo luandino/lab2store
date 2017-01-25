@@ -692,6 +692,8 @@ def show_items_in_order(order_id):
             return jsonify([{'description': '', 'order_id': '', 'price': '', 'orderitem_id': '', 'name': 'token vacio o viejo', 'quantity': 0, 'product_id': 0}])
     elif request.method == 'GET':
          return jsonify([{'description': '', 'order_id': '', 'price': '', 'orderitem_id': '', 'name': 'get', 'quantity': 0, 'product_id': 0}])
+    else:
+        return jsonify([{'description': '', 'order_id': '', 'price': '', 'orderitem_id': '', 'name': 'nosabe','quantity': 0, 'product_id': 0}])
 
 
 def order_items_in_order(order_id):
