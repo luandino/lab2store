@@ -318,7 +318,7 @@ def sendtoken():
         if encontrado.expires > present:
             unClient=Client.query.filter_by(client_id=encontrado.client_id).first()
             unUser=User.query.filter_by(id=encontrado.user_id).first()
-            secondos=7200
+            secondos=14200
             acct=gen_salt(40)
             accr=gen_salt(40)
             cuando=datetime.now() + timedelta(seconds=secondos)
