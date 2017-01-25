@@ -21,12 +21,12 @@ API_KEY = ''
 #REDIRECT_URI = 'http://localhost:5003/callback' #luciano
 
 #SERVER_ADDR ="http://localhost:5000"
-SERVER_ADDR ="http://138.68.67.49" # DIGITALOCEAN 2 CPU
+#SERVER_ADDR ="http://138.68.67.49" # DIGITALOCEAN 2 CPU
 
-#SERVER_ADDR ="http://139.59.145.248" # DIGITALOCEAN 1 CPU
+SERVER_ADDR ="http://139.59.145.248" # DIGITALOCEAN 1 CPU
 
-CAM = "http://grulicueva.homenet.org/~luciano/lab2store"
-#CAM = ""
+#CAM = "http://grulicueva.homenet.org/~luciano/lab2store"
+CAM = ""
 REDIRECT_URI = CAM+'/callback' #anna
 
 ### AUTH BUT WITHOUT THE NEED TO RE-AUTH ###

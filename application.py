@@ -400,7 +400,11 @@ def whois():
 # @oauth.authorize_handler
 def authorize(*args, **kwargs):
     if request.method == 'GET':
+        print "client_id"
+
         client_id = request.args.get('client_id')
+        print client_id
+        print "imprimio?"
         session['client_id'] = client_id
         cliente_encontrado = Client.query.filter_by(client_id=client_id).first()
         session['user_id']=cliente_encontrado.user_id
