@@ -25,13 +25,7 @@ application = app = Flask(__name__)
 application.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
 application.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
 application.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
-
-    #Bootstrap(application)
-    #Session(application)
-#    return application
-
-#application = Flask(__name__)
-#application.config['SECRET_KEY'] = 'rewrewtrtrewsadsdwredsadrqeqw'
+application.config['SECRET_KEY'] = 'rewrewtrtrewsadsdwredsadrqeqw'
 
 
 
@@ -921,7 +915,7 @@ def index():
 def about():
     return flask.render_template('about.html')
 
-application.secret_key = os.urandom(24)
+application.secret_key = 'dkjfkdjfkdsjfkdsjfdskjfdkfjk'
 
 if __name__ == '__main__':
     db.create_all()
