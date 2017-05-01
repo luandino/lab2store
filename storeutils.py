@@ -5,8 +5,17 @@ import os
 from math import ceil
 import urllib
 
-CLIENT_ID = 'TRq20Yb5xutn9T8cjxU7MjlJRUrwqi0VwCevobaP' #luciano
-CLIENT_SECRET = 'u1pKCkRmd0QTWmww9v43a7zv8ymtNN6OdYdR5puO4ZviDCWZzI' #luciano
+#CLIENT_ID = 'TRq20Yb5xutn9T8cjxU7MjlJRUrwqi0VwCevobaP' #luciano
+#CLIENT_SECRET = 'u1pKCkRmd0QTWmww9v43a7zv8ymtNN6OdYdR5puO4ZviDCWZzI' #luciano
+
+
+CLIENT_ID = 'rCr4rtPXAhZcPJ8NqFLEVaX5UJJBQuJ90bqG1viK' #jose
+CLIENT_SECRET = 'yNoWbOya0zGG0yYCjSKChkA2sCsGuAOCdkemgLh9rhcstXMCf0' #jose
+
+
+#CLIENT_ID = 'ISk23tJdGT7pZZpzrrPGq4n3jvf3M0TjpMbsxud3'         #anna 2cpu
+#CLIENT_SECRET = '8ZIoI9qfErtwzDxnI5aZsw2cy0hO7v8QSQxcCqR1HwudjTbeh5'       #anna 2cpu
+#SERVER_ADDR ="http://138.68.67.49" # DIGITALOCEAN 2 CPU
 
 #CLIENT_ID = 'l7ePTstSGglimGHhpE2Ogtks3KkCa5jzk8Vj2qQ1' #peter
 #CLIENT_SECRET = '5VUhu0AglAJozVGTtcXb8Um6sfInMvU6Y1c6kSYCsqWZEQ6Whl' #peter
@@ -16,7 +25,7 @@ CLIENT_SECRET = 'u1pKCkRmd0QTWmww9v43a7zv8ymtNN6OdYdR5puO4ZviDCWZzI' #luciano
 API_KEY = ''
 #CLIENT_ID = '2JycAQbLawSXfPsBgk3WDXmZ9WuXPSVYhd9EKU9W' #anna
 #CLIENT_SECRET = '16n6kAQrSzDjb8TCuYxw9N1SADinxXu19YP51hl71teEVaeDlD' #anna
-#SERVER_ADDR ="http://139.59.145.248"
+SERVER_ADDR ="http://139.59.145.248"
 #SERVER_ADDR = "http://tiendas-env.wicjtrbqed.us-west-2.elasticbeanstalk.com"
 #SERVER_ADDR ="http://localhost:5000"
 #SERVER_ADDR = "http://negocio-env.2jqp5pvbnf.us-west-2.elasticbeanstalk.com"
@@ -25,7 +34,7 @@ API_KEY = ''
 #SERVER_ADDR ="http://localhost:5000"
 #SERVER_ADDR ="http://138.68.67.49" # DIGITALOCEAN 2 CPU
 
-SERVER_ADDR ="http://139.59.145.248" # DIGITALOCEAN 1 CPU
+#SERVER_ADDR ="http://139.59.145.248" # DIGITALOCEAN 1 CPU
 
 #CAM = "http://grulicueva.homenet.org/~luciano/lab2store"
 CAM = ""

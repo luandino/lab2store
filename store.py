@@ -3,6 +3,7 @@ from flask import Flask, url_for, render_template, redirect, request
 from flask import session as login_session
 import requests
 import os
+import sys
 from flask import send_from_directory
 from datetime import datetime, timedelta
 from storeutils import pool_server, pay_order, make_order, add_product_to_order,query_items_in_order_detailed,query_orders
@@ -10,43 +11,75 @@ from storeutils import query_products, Pagination, query_product_detail
 from storeutils import get_profile,refresh_token,code_for_token, auth_url
 from flask_bootstrap import Bootstrap
 
+from flask import Flask, request, session, g, redirect, url_for, abort, \
+     render_template, flash
+
 def create_app():
   app = Flask(__name__)
   Bootstrap(app)
   return app
 
+import flaskr
+
 
 #CAM = "http://grulicueva.homenet.org/~luciano/lab2store"
-CAM = ""
-
-CLIENT_ID = 'TRq20Yb5xutn9T8cjxU7MjlJRUrwqi0VwCevobaP' #luciano
-CLIENT_SECRET = 'u1pKCkRmd0QTWmww9v43a7zv8ymtNN6OdYdR5puO4ZviDCWZzI' #luciano
 
 
-API_KEY = ''
+#CLIENT_ID = 'TRq20Yb5xutn9T8cjxU7MjlJRUrwqi0VwCevobaP' #luciano
+#CLIENT_SECRET = 'u1pKCkRmd0QTWmww9v43a7zv8ymtNN6OdYdR5puO4ZviDCWZzI' #luciano
+
+
+###CLIENT_ID = 'rCr4rtPXAhZcPJ8NqFLEVaX5UJJBQuJ90bqG1viK' #jose
+###CLIENT_SECRET = 'yNoWbOya0zGG0yYCjSKChkA2sCsGuAOCdkemgLh9rhcstXMCf0' #jose
+###SERVER_ADDR ="http://139.59.145.248" # DIGITALOCEAN 1 CPU
+###API_KEY = ''
+###CAM = ""
+
+#CLIENT_ID = 'ISk23tJdGT7pZZpzrrPGq4n3jvf3M0TjpMbsxud3'         #anna 2cpu
+#CLIENT_SECRET = '8ZIoI9qfErtwzDxnI5aZsw2cy0hO7v8QSQxcCqR1HwudjTbeh5'       #anna 2cpu
+#SERVER_ADDR ="http://138.68.67.49" # DIGITALOCEAN 2 CPU
+
 
 #CLIENT_ID = 'l7ePTstSGglimGHhpE2Ogtks3KkCa5jzk8Vj2qQ1' #peter
 #CLIENT_SECRET = '5VUhu0AglAJozVGTtcXb8Um6sfInMvU6Y1c6kSYCsqWZEQ6Whl' #peter
 
-SERVER_ADDR ="http://139.59.145.248" # DIGITALOCEAN 1 CPU
 
-#SERVER_ADDR ="http://138.68.67.49" # DIGITALOCEAN 2 CPU
+
+
 #SERVER_ADDR ="http://localhost:5000"
 
 app = Flask(__name__)
+app.config.from_object(__name__)
+
+
+
 app.secret_key = 'twtrtretrefsdgfgvbcvbbvbcviutiujgkhj'
+
+
 
 
 ############################################################################################################
 
+#print os.environ['PAT']
+#print os.environ['HOME']
+#import sys
+#print sys.home
 
 
+#app.config['PAT'] = os.environ.get('PAT','default si no existe')
+#print app.config['HISTSIZE']
+#print os.environ.get('ENVIRO', 'defaeeult si no existe')#
 
+app.config.from_envvar('ENVIRO', silent=True)
 
+#REDIRECT_URI = app.config['CAMINO']+'callback' #luciano
 
+SERVER_ADDR=app.config['SERVER_ADDR']
+CAM=app.config['CAMINO']
+CLIENT_ID = app.config['CLIENT_ID']
+CLIENT_SECRET = app.config['CLIENT_SECRET']
 
-REDIRECT_URI = CAM+'callback' #luciano
-
+#print REDIRECT_URI
 ### AS I RECEIVED A WARNING OF LACK OF FAVICON, I CREATE ONE AND PUT IN THE PATH ###
 
 def url_for_other_page(page):

@@ -8,15 +8,13 @@ from passlib.apps import custom_app_context as pwd_context
 from itsdangerous import (TimedJSONWebSignatureSerializer as Serializer, BadSignature, SignatureExpired)
 from flask import send_from_directory
 from werkzeug.security import gen_salt
-from datetime import timedelta
-from datetime import datetime
+from datetime import timedelta, datetime
 import urllib
 #import numpy as np
 #from numpy import genfromtxt
 from time import time
 from sqlalchemy.ext.declarative import declarative_base
-from flask import abort
-import os
+
 PER_PAGE = 10
 
 application = app = Flask(__name__)
@@ -533,9 +531,9 @@ def printvariables():
 
 
 
-def Load_Data(file_name):
-    data = genfromtxt(file_name, delimiter=',', skiprows=1, converters={0: lambda s: str(s)})
-    return data.tolist()
+#def Load_Data(file_name):
+    #data = genfromtxt(file_name, delimiter=',', skiprows=1, converters={0: lambda s: str(s)})
+#    return data.tolist()
 
 Base = declarative_base()
 
@@ -919,4 +917,4 @@ application.secret_key = 'dkjfkdjfkdsjfkdsjfdskjfdkfjk'
 
 if __name__ == '__main__':
     db.create_all()
-    application.run(host='0.0.0.0')
+    application.run()
